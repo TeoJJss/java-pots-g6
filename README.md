@@ -13,6 +13,6 @@ Upload txt files in `storage/` folder.
 **item.txt**  
 `col 1` : item ID (unique)  
 `col 2` : item name   
-`col 3` : quantity
+`col 3` : quantity  
 `col 4` : reorder level    
 `col 5` : supplier status (active, deleted)  
