@@ -15,4 +15,5 @@ Upload txt files in `storage/` folder.
 `col 2` : item name   
 `col 3` : quantity  
 `col 4` : reorder level    
-`col 5` : supplier status (active, deleted)  
+`col 5` : supplier ID (foreign)    
+`col 6` : item status (active, deleted)  
