@@ -44,8 +44,8 @@ public abstract class Supplier implements Config{
     /* Get info of current Supplier object */
     public String [] getCurrentSupplier(){
         /* Elements in the array are arranged in: ID, Name, Email */
-        String [] userInfo = {this.id, this.name, this.email};
-        return userInfo;
+        String [] supplierInfo = {this.id, this.name, this.email};
+        return supplierInfo;
     }
     
     /* Check supplier if exist */
@@ -160,7 +160,7 @@ public abstract class Supplier implements Config{
     }
     
     /* Get multi-dimensional array of Supplier */
-    private String [][] getSupplierList(){
+    public String [][] getSupplierList(){
         try{
             
             // Get number of rows in the file
@@ -227,6 +227,11 @@ public abstract class Supplier implements Config{
         // Check if supplier ID exists
         if (!(this.validateSupplierId(supplierId))){
             throw new Exception("Invalid supplier ID");
+        }
+        
+        // Validate email format
+        if (!(supplierEmail).contains("@")){
+            throw new Exception("Invalid email address");
         }
         
         // Get array of suppliers
