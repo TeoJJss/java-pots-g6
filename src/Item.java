@@ -131,6 +131,7 @@ public class Item extends Supplier {
                 String itemId = itemInfo[0];
                 String itemName = itemInfo[1];
                 int quantity = Integer.parseInt(itemInfo[2]);
+                int reorderLevel = Integer.parseInt(itemInfo[3]);
                 
                 String [] supplierInfo = super.getSupplierInfoById(supplierId);
                 String supplierName = supplierInfo[1];

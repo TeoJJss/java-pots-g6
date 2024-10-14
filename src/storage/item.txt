@@ -1,3 +1,3 @@
 I1,newitem1,120,150,S1,active
-I2,newitem2,120,150,S2,active
+I2,newitem2,120,160,S2,active
 I3,newitem3,130,100,S1,active
