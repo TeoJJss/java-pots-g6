@@ -73,7 +73,7 @@ public abstract class Supplier implements Config{
     }
     
     /* Generate unique supplierID */
-    public String generateNewId(){
+    private String generateNewId(){
         int count = this.getNumberOfSuppliers();
         count++;
         String supplierId = "S"+count;
@@ -131,7 +131,7 @@ public abstract class Supplier implements Config{
 
             // Generate new Supplier ID
             String supplierId = this.generateNewId();
-            
+            System.out.println("Supplier ID: "+supplierId);
             if (supplierId == null){
                 throw new Exception();
             }

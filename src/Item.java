@@ -6,7 +6,7 @@ import java.io.FileWriter;
 
 public class Item extends Supplier {
     private String itemId, itemName;
-    private int quantity;
+    private int quantity, reorderLevel;
     private final String ITEM_FILE = BASE_DIR + "item.txt";
     private File itemF = new File(ITEM_FILE);
     
@@ -16,21 +16,23 @@ public class Item extends Supplier {
     }
     
     /* Consctructor for new item (without ID) */
-    Item(String itemName, int quanity){
+    Item(String itemName, int quanity, int reorderLevel){
         this.itemName = itemName;
         this.quantity = quanity;
+        this.reorderLevel = reorderLevel;
     }
     
     /* Constructor for private use (with ID) */
-    private Item(String itemId,String itemName, int quanity){
+    private Item(String itemId,String itemName, int quanity, int reorderLevel){
         this.itemId = itemId;
         this.itemName = itemName;
         this.quantity = quanity;
+        this.reorderLevel = reorderLevel;
     }
     
     /* Get item info of current object */
     public String [] getItemInfo(){
-        String [] itemInfo = {this.itemId, this.itemName, String.valueOf(this.quantity)};
+        String [] itemInfo = {this.itemId, this.itemName, String.valueOf(this.quantity), String.valueOf(this.reorderLevel)};
         
         return itemInfo;
     }
@@ -54,7 +56,7 @@ public class Item extends Supplier {
     }
     
     /* Generate unique itemID */
-    public String generateNewId(){
+    private String generateNewId(){
         int count = this.getNumberOfItems();
         count++;
         String newItemId = "I"+count;
@@ -83,13 +85,14 @@ public class Item extends Supplier {
                 String itemId = itemInfo[0];
                 String itemName = itemInfo[1];
                 int quantity = Integer.parseInt(itemInfo[2]);
-                String supplierId = itemInfo[3];
+                int reorderLevel = Integer.parseInt(itemInfo[3]);
+                String supplierId = itemInfo[4];
                 
                 String [] supplierInfo = super.getSupplierInfoById(supplierId);
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
                 
-                itemList[ind] = new Item(itemId, itemName, quantity);
+                itemList[ind] = new Item(itemId, itemName, quantity, reorderLevel);
                 itemList[ind].setCurrentSupplier(supplierId, supplierName, supplierEmail);
                 ind++;
             }
@@ -122,7 +125,7 @@ public class Item extends Supplier {
                 String [] itemInfo = row.split(",");
                 
                 // Skip the item if not the target
-                if (!(itemInfo[3].equals(supplierId))){
+                if (!(itemInfo[4].equals(supplierId))){
                     continue;
                 }
                 String itemId = itemInfo[0];
@@ -133,7 +136,7 @@ public class Item extends Supplier {
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
                 
-                itemList[ind] = new Item(itemId, itemName, quantity);
+                itemList[ind] = new Item(itemId, itemName, quantity, reorderLevel);
                 itemList[ind].setCurrentSupplier(supplierId, supplierName, supplierEmail);
                 ind++;
             }
@@ -158,6 +161,7 @@ public class Item extends Supplier {
                 StringBuffer sb = new StringBuffer(itemId);
                 sb.append(",").append(this.itemName);
                 sb.append(",").append(this.quantity);
+                sb.append(",").append(this.reorderLevel);
                 sb.append(",").append(supplierId);
                 sb.append(",").append("active");
                 
@@ -167,7 +171,7 @@ public class Item extends Supplier {
                 itemBw.close();
                 itemFw.close();
             }else{
-                throw new Exception("Invalid supplier id");
+                throw new Exception("Invalid supplier ID");
             }
             
         }catch (Exception e){
@@ -203,6 +207,7 @@ public class Item extends Supplier {
                 StringBuffer sb = new StringBuffer(itemId);
                 sb.append(",").append(this.itemName);
                 sb.append(",").append(this.quantity);
+                sb.append(",").append(this.reorderLevel);
                 sb.append(",").append(supplierId);
                 sb.append(",").append("active");
                 
@@ -212,7 +217,7 @@ public class Item extends Supplier {
                 itemBw.close();
                 itemFw.close();
             }else{
-                throw new Exception("Invalid supplier id");
+                throw new Exception("Invalid supplier ID");
             }
             
         }catch (Exception e){
