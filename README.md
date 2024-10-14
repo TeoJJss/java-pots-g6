@@ -1,7 +1,7 @@
 # OODJ G6 - POTS
 ## Instruction
 Upload Java files in `src/` folder.  
-Upload txt files in `storage/` folder.  
+Upload txt files in `src/storage/` folder.  
 
 ## Txt file content
 **supplier.txt**  
