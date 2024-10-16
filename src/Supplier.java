@@ -3,8 +3,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Supplier implements Config{
     private String id, name, email, status;
