@@ -1,2 +1,4 @@
-S1,newSupp1,new1@drs.com,active
-S2,newSupp2,new2@drs.com,active
+S1,Home Supplier,home@g.com,active
+S2,Living Sdn Bhd,living@sdn.com,active
+S3,New Sdn Bhd,new@sdn.com,active
+S4,New Sdn Bhd,new@sdn.com,active

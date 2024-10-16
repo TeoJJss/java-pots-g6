@@ -3,11 +3,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.HashSet;
+import java.util.Set;
 
-public abstract class Supplier implements Config{
-    private String id, name, email;
+public class Supplier implements Config{
+    private String id, name, email, status;
     private final String SUPPLIER_FILE = BASE_DIR + "supplier.txt";
     private File supplierF = new File(SUPPLIER_FILE);
+    private Item [] items;
     
     /* Default constructor */
     Supplier(){
@@ -21,31 +24,43 @@ public abstract class Supplier implements Config{
     }
     
     /* Constructor for private use (with ID) */
-    private Supplier(String id, String name, String email){
+    private Supplier(String id, String name, String email, String status){
         this.id = id;
         this.name = name;
         this.email = email;
+        this.status = status;
     }
     
     /* Set new Supplier info (without ID) */
-    public void setCurrentSupplier(String name, String email){
+    public void setCurrentSupplier(String name, String email, String status){
         this.name = name;
         this.email = email;
+        this.status = status;
     }
     
     /* Set Supplier info (with ID) */
-    public void setCurrentSupplier(String id, String name, String email){
-        
+    public void setCurrentSupplier(String id, String name, String email, String status){
         this.id = id;
         this.name = name;
         this.email = email;
+        this.status = status;
     }
     
-    /* Get info of current Supplier object */
+    /* Add items into a supplier obj */
+    public void setItems(Item [] items){
+        this.items = items;
+    }
+    
+    /* Get info of current Supplier */
     public String [] getCurrentSupplier(){
         /* Elements in the array are arranged in: ID, Name, Email */
-        String [] supplierInfo = {this.id, this.name, this.email};
+        String [] supplierInfo = {this.id, this.name, this.email, this.status};
         return supplierInfo;
+    }
+    
+    /* Get info of current Supplier's items */
+    public Item [] getCurrentSupplierItems(){
+        return this.items;
     }
     
     /* Check supplier if exist */
@@ -81,23 +96,68 @@ public abstract class Supplier implements Config{
         return supplierId;
     }
     
+    /* Get list of suppliers */
+    public Supplier [] getSupplierList(){
+        try{
+            
+            // Get number of rows in the file
+            int count = this.getNumberOfSuppliers();
+            if (count < 1){
+                throw new Exception("No supplier data");
+            }
+            
+            // Create array
+            Supplier [] supplierArr = new Supplier[count];
+            
+            // Enter data into array
+            String row;
+            int ind = 0;
+            FileReader supplierFr = new FileReader(this.supplierF);
+            BufferedReader supplierBr = new BufferedReader(supplierFr);
+            while ((row=supplierBr.readLine()) != null){
+                // Add data from txt to array
+                String [] supplierInfo = row.split(",");
+                String supplierId = supplierInfo[0];
+                String supplierName = supplierInfo[1];
+                String supplierEmail = supplierInfo[2];
+                String supplierStatus = supplierInfo[3];
+                
+                supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
+                
+                // get the supplier's items
+                Item [] itemList = new Item().getItemList(supplierId);
+                supplierArr[ind].items = itemList;
+                
+                ind++;
+            }
+            supplierBr.close();
+            supplierFr.close();
+            return supplierArr;
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
+    
     /* Get Supplier Info by ID */
     public String [] getSupplierInfoById(String id){
         try{
             FileReader supplierFr = new FileReader(this.supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             String row;
-            String [] supplier = new String[3];
+            String [] supplier = new String[4];
             
             while ((row=supplierBr.readLine()) != null){
                 String [] supplierInfo = row.split(",");
                 String supplierId = supplierInfo[0];
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
+                String supplierStatus = supplierInfo[3];
                 if (supplierId.equals(id)){
                     supplier[0] = supplierId;
                     supplier[1] = supplierName;
                     supplier[2] = supplierEmail;
+                    supplier[3] = supplierStatus;
                     break;
                 }
             }            
@@ -116,7 +176,7 @@ public abstract class Supplier implements Config{
         }
     }
     
-    /* Add new supplier */
+    /* Add new supplier with new items */
     public String addSupplier(){
         try{
             // Make sure Supplier object has info
@@ -149,6 +209,11 @@ public abstract class Supplier implements Config{
             supplierBw.close();
             supplierFw.close();
             
+            // Add items
+            for (Item item : this.items){
+                item.addItem(supplierId);
+            }
+            
             return supplierId;
         }catch (NullValException e){
             System.out.print(e);
@@ -157,62 +222,20 @@ public abstract class Supplier implements Config{
             System.out.print(e);
             return null;
         }        
-    }
-    
-    /* Get multi-dimensional array of Supplier */
-    public String [][] getSupplierList(){
-        try{
-            
-            // Get number of rows in the file
-            int count = this.getNumberOfSuppliers();
-            if (count < 1){
-                throw new Exception("No supplier data");
-            }
-            
-            // Create a multidimensional array
-            String [][] supplierArr = new String[count][4];
-            
-            // Enter data into array
-            String row;
-            int ind = 0;
-            FileReader supplierFr = new FileReader(this.supplierF);
-            BufferedReader supplierBr = new BufferedReader(supplierFr);
-            while ((row=supplierBr.readLine()) != null){
-                // Add data from txt to multidimensional array
-                String [] supplierInfo = row.split(",");
-                String supplierId = supplierInfo[0];
-                String supplierName = supplierInfo[1];
-                String supplierEmail = supplierInfo[2];
-                String supplierStatus = supplierInfo[3];
-                supplierArr[ind][0] = supplierId;
-                supplierArr[ind][1] = supplierName;
-                supplierArr[ind][2] = supplierEmail;
-                supplierArr[ind][3] = supplierStatus;
-                
-                ind++;
-            }
-            supplierBr.close();
-            supplierFr.close();
-            
-            return supplierArr;
-        }catch (Exception e){
-            System.out.println(e);
-            return null;
-        }
-    }
-    
+    }    
     
     /* Rewrite supplier file */
-    private void upSupplierFile(String [][] supplierArr){
+    private void upSupplierFile(Supplier [] newSupplierArr){
         try {
             FileWriter supplierFw = new FileWriter(SUPPLIER_FILE);
             BufferedWriter supplierBw = new BufferedWriter(supplierFw);
             
-            for (int i=0; i<supplierArr.length; i++){
-                StringBuffer sb = new StringBuffer(supplierArr[i][0]);
-                sb.append(",").append(supplierArr[i][1]);
-                sb.append(",").append(supplierArr[i][2]);
-                sb.append(",").append(supplierArr[i][3]);
+            for (Supplier supp : newSupplierArr){
+                String [] supplierArr = supp.getCurrentSupplier();
+                StringBuffer sb = new StringBuffer(supplierArr[0]);
+                sb.append(",").append(supplierArr[1]);
+                sb.append(",").append(supplierArr[2]);
+                sb.append(",").append(supplierArr[3]);
                 supplierBw.write(sb.append("\n").toString());
             }
             supplierBw.close();
@@ -223,62 +246,68 @@ public abstract class Supplier implements Config{
     }
     
     /* Edit supplier */
-    public void editSupplier(String supplierId, String supplierName, String supplierEmail) throws Exception{
+    public void editSupplier(String newSupplierName, String newSupplierEmail) throws Exception{
         // Check if supplier ID exists
-        if (!(this.validateSupplierId(supplierId))){
+        if (!(this.validateSupplierId(this.id))){
             throw new Exception("Invalid supplier ID");
         }
         
-        // Validate email format
-        if (!(supplierEmail).contains("@")){
+        // Validate new data
+        if (!(newSupplierName.length() > 3)){
+            throw new Exception("The minimum length of supplier name is 3");
+        }
+        if (!(newSupplierEmail).contains("@")){
             throw new Exception("Invalid email address");
         }
         
         // Get array of suppliers
-        String [][] currentSupplierList = this.getSupplierList();
+        Supplier [] supplierArr = this.getSupplierList();
         Boolean isEditted = false;
+        int ind = 0;
         
         // Loop to find the supplier ID and edit
-        for (int ind=0; ind<currentSupplierList.length; ind++){
-            if ((currentSupplierList[ind][0]).equals(supplierId)){
-                currentSupplierList[ind][1] = supplierName;
-                currentSupplierList[ind][2] = supplierEmail;
+        for (Supplier supp : supplierArr){
+            String supplierId = supp.getCurrentSupplier()[0];
+            String status = supp.getCurrentSupplier()[3];
+            if (this.id.equals(supp.getCurrentSupplier()[0])){ 
+                supplierArr[ind] = new Supplier(supplierId, newSupplierName, newSupplierEmail, status);
                 isEditted = true;
-                break;
             }
+            ind ++;
         }
         
         // Write to file if edit take place
         if (isEditted){
-            this.upSupplierFile(currentSupplierList);
+            this.upSupplierFile(supplierArr);
         }else{
             throw new Exception("Fail to edit");
         }
     }
     
     /* Delete supplier */
-    public void deleteSupplier(String supplierId) throws Exception{
+    public void deleteSupplier() throws Exception{
         // Check if supplier ID exists
-        if (!(this.validateSupplierId(supplierId))){
+        if (!(this.validateSupplierId(this.id))){
             throw new Exception("Invalid supplier ID");
         }
         
         // Get array of suppliers
-        String [][] currentSupplierList = this.getSupplierList();
+        Supplier [] supplierArr = this.getSupplierList();
         Boolean isDeleted = false;
+        int ind =0;
         
         // Loop to find the supplier ID and delete
-        for (int ind=0; ind<currentSupplierList.length; ind++){
-            if ((currentSupplierList[ind][0]).equals(supplierId)){
-                currentSupplierList[ind][3] = "deleted";
+        for (Supplier supp : supplierArr){
+            if (this.id.equals(supp.getCurrentSupplier()[0])){ 
+                supp.setCurrentSupplier(this.name, this.email, "deleted");
                 isDeleted = true;
-                break;
             }
+            ind ++;
         }
         
         // Write to file if deletion take place
         if (isDeleted){
-            this.upSupplierFile(currentSupplierList);
+            this.upSupplierFile(supplierArr);
         }else{
             throw new Exception("Fail to delete");
         }

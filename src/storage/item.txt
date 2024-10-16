@@ -1,3 +1,9 @@
-I1,newitem1,120,150,S1,active
-I2,newitem2,120,160,S2,active
-I3,newitem3,130,100,S1,active
+I1,fans,21,10,S1,active
+I2,table,30,20,S2,active
+I3,desk,35,18,S2,active
+I4,lamp,30,20,S3,active
+I5,oven,35,18,S3,active
+I6,calendar,25,14,S2,active
+I7,lamp,30,20,S4,active
+I8,oven,35,18,S4,active
+I9,calendar,25,14,S3,active
