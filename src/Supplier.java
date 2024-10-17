@@ -62,9 +62,35 @@ public class Supplier implements Config{
     }
     
     /* Check supplier if exist */
-    public Boolean validateSupplierId(String id){
+    private Boolean validateSupplierId(String id){
         String [] supplier = this.getSupplierInfoById(id);
         return supplier != null;
+    }
+    
+    public Boolean validateSupplier(){
+        try{
+            FileReader supplierFr = new FileReader(this.supplierF);
+            BufferedReader supplierBr = new BufferedReader(supplierFr);
+            String row;
+            while ((row=supplierBr.readLine()) != null){
+                String [] supplierInfo = row.split(",");
+                if (supplierInfo[0].equals(this.id) && supplierInfo[1].equals(this.name) && supplierInfo[2].equals(this.email)){
+                    supplierBr.close();
+                    supplierFr.close();
+                    if (supplierInfo[3].equals("active")){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            }
+            supplierBr.close();
+            supplierFr.close();
+            return false;
+        }catch (Exception e){
+            System.out.println(e);
+            return false;
+        }
     }
     
     /* Get number of Suppliers in file */
@@ -195,10 +221,11 @@ public class Supplier implements Config{
             }
 
             // Create new record in String
+            String status = "active";
             StringBuffer sb = new StringBuffer(supplierId);
             sb.append(",").append(this.name);
             sb.append(",").append(this.email);
-            sb.append(",").append("active");
+            sb.append(",").append(status);
 
             // Open file to append new record
             FileWriter supplierFw = new FileWriter(supplierF, true);
@@ -208,8 +235,10 @@ public class Supplier implements Config{
             supplierFw.close();
             
             // Add items
+            Supplier supp = new Supplier(supplierId, this.name, this.email, status);
             for (Item item : this.items){
-                item.addItem(supplierId);
+                item.setSupplier(supp);
+                item.addItem();
             }
             
             return supplierId;
