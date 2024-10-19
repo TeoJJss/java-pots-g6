@@ -67,6 +67,7 @@ public class Supplier implements Config{
         return supplier != null;
     }
     
+    /* Vakidate current supplier obj */
     public Boolean validateSupplier(){
         try{
             FileReader supplierFr = new FileReader(this.supplierF);
@@ -111,8 +112,30 @@ public class Supplier implements Config{
         }
     }
     
+    /* Get number of Suppliers in file */
+    private int getNumberOfActiveSuppliers(){
+        try{
+            FileReader supplierFr = new FileReader(this.supplierF);
+            BufferedReader supplierBr = new BufferedReader(supplierFr);
+            int count = 0;
+            String row;
+            while ((row=supplierBr.readLine()) != null){
+                String supplierStatus = row.split(",")[3];
+                if (supplierStatus.equals("active")){
+                    count++;
+                }
+            }
+            supplierBr.close();
+            supplierFr.close();
+            return count;
+        }catch (Exception e){
+            System.out.println(e);
+            return 0;
+        }
+    }
+    
     /* Generate unique supplierID */
-    private String generateNewId(){
+    public String generateNewId(){
         int count = this.getNumberOfSuppliers();
         count++;
         String supplierId = "S"+count;
@@ -145,6 +168,53 @@ public class Supplier implements Config{
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
                 String supplierStatus = supplierInfo[3];
+                
+                supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
+                
+                // get the supplier's items
+                Item [] itemList = new Item().getItemList(supplierId);
+                supplierArr[ind].items = itemList;
+                
+                ind++;
+            }
+            supplierBr.close();
+            supplierFr.close();
+            return supplierArr;
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
+    
+    /* Get list of active suppliers */
+    public Supplier [] getActiveSupplierList(){
+        try{
+            
+            // Get number of rows in the file
+            int count = this.getNumberOfActiveSuppliers();
+            if (count < 1){
+                throw new Exception("No active supplier data");
+            }
+            
+            // Create array
+            Supplier [] supplierArr = new Supplier[count];
+            
+            // Enter data into array
+            String row;
+            int ind = 0;
+            FileReader supplierFr = new FileReader(this.supplierF);
+            BufferedReader supplierBr = new BufferedReader(supplierFr);
+            while ((row=supplierBr.readLine()) != null){
+                // Add data from txt to array
+                String [] supplierInfo = row.split(",");
+                String supplierId = supplierInfo[0];
+                String supplierName = supplierInfo[1];
+                String supplierEmail = supplierInfo[2];
+                String supplierStatus = supplierInfo[3];
+                
+                if (!supplierStatus.equals("active")){
+                    continue;
+                }
                 
                 supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
                 
@@ -275,7 +345,7 @@ public class Supplier implements Config{
     /* Edit supplier */
     public void editSupplier(String newSupplierName, String newSupplierEmail) throws Exception{
         // Check if supplier ID exists
-        if (!(this.validateSupplierId(this.id))){
+        if (!(this.validateSupplier())){
             throw new Exception("Invalid supplier ID");
         }
         
@@ -314,7 +384,7 @@ public class Supplier implements Config{
     /* Delete supplier */
     public void deleteSupplier() throws Exception{
         // Check if supplier ID exists
-        if (!(this.validateSupplierId(this.id))){
+        if (!(this.validateSupplier())){
             throw new Exception("Invalid supplier ID");
         }
         

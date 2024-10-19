@@ -67,7 +67,7 @@ public class Item implements Config {
     }
     
     /* Generate unique itemID */
-    private String generateNewId(){
+    public String generateNewId(){
         int count = this.getNumberOfItems();
         count++;
         String newItemId = "I"+count;
