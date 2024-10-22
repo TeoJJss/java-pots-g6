@@ -134,6 +134,48 @@ public class ItemSales extends Item {
         }
     }
     
+    /* Get sales of an item id between two dates */
+    public int getSalesByItemId(String startDateStr, String endDateStr){
+        try{
+            String row;
+            int count = this.getNumberOfSalesRecords();
+            ItemSales [] itemSalesRecords = new ItemSales[count];
+            int ind = 0;
+            int itemSales = 0;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate startDate = LocalDate.parse(startDateStr, formatter);
+            LocalDate endDate = LocalDate.parse(endDateStr, formatter);
+            
+            FileReader salesFr = new FileReader(this.itemSalesF);
+            BufferedReader salesBr = new BufferedReader(salesFr);
+            while((row=salesBr.readLine())!=null){
+                String [] salesInfo = row.split(",");
+                String itemId = salesInfo[0];
+                if (!itemId.equals(super.getItemId())){
+                    continue;
+                }
+                int sales = Integer.parseInt(salesInfo[1]);
+                String salesDate = salesInfo[2];
+                
+                // Compare dates
+                LocalDate itemSalesDate = LocalDate.parse(salesDate, formatter);
+                if (
+                        (itemSalesDate.isAfter(startDate) && itemSalesDate.isBefore(endDate)) || // after start date and before end date, or
+                        itemSalesDate.isEqual(startDate) || itemSalesDate.isEqual(endDate) // equal start date or end date
+                    ){
+                    itemSales += sales;
+                }                
+            }
+
+            salesBr.close();
+            salesFr.close();
+            return itemSales;
+        }catch (Exception e){
+            System.out.println(e);
+            return 0;
+        }
+    }
+    
     public int getNumberOfSalesRecords(){
         try{
             FileReader salesFr = new FileReader(this.itemSalesF);
