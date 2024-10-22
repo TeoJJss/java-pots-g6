@@ -6,7 +6,7 @@ import java.io.FileWriter;
 
 public class Item implements Config {
     private String itemId, itemName, status;
-    private int quantity, reorderLevel;
+    private int quantity, reorderLevel, reOrderAmt;
     private Supplier supplier;
     private final String ITEM_FILE = BASE_DIR + "item.txt";
     private File itemF = new File(ITEM_FILE);
@@ -37,6 +37,20 @@ public class Item implements Config {
         this.supplier = supp;
     }
     
+    public String getItemId(){
+        return this.itemId;
+    }
+    
+    /* Set reorder amount (for PR only) */
+    public void setReorderAmt(int reorderAmt){
+        this.reOrderAmt = reorderAmt;
+    }
+    
+    /* Get reorder amount (for PR only) */
+    public int getReorderAmt(){
+        return this.reOrderAmt;
+    }
+    
     public Supplier getSupplier(){
         return this.supplier;
     }
@@ -46,6 +60,47 @@ public class Item implements Config {
         String [] itemInfo = {this.itemId, this.itemName, String.valueOf(this.quantity), String.valueOf(this.reorderLevel), this.status};
         
         return itemInfo;
+    }
+    
+    /* Get item info by ID */
+    public Item getItemById(String itemId){
+        try{
+            Item [] items = this.getItemList();
+            if (items == null){
+                throw new Exception("Empty Item list");
+            }
+            
+            for (Item item : items){
+                if(item.getItemId().equals(itemId)){
+                    return item;
+                }
+            }
+            return null;
+        }catch (Exception e){
+            System.out.print(e);
+            return null;
+        }
+    }
+    
+    /* set item obj by ID */
+    public void setItemById(String itemId) throws Exception{
+        Item item = this.getItemById(itemId);
+        if (item == null){
+            throw new Exception("Empty Item");
+        }
+        String [] itemInfo = item.getItemInfo();
+        String itemName = itemInfo[1];
+        int quantity = Integer.parseInt(itemInfo[2]);
+        int reorderLevel = Integer.parseInt(itemInfo[3]);
+        String status = itemInfo[4];
+        
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.quantity = quantity;
+        this.reorderLevel = reorderLevel;
+        this.status = status;
+        
+        this.setSupplier(item.getSupplier());
     }
     
     /* Get number of items in file */

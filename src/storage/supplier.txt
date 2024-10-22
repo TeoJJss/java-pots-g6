@@ -1,4 +1,5 @@
-S1,Home Supplier,home@g.com,active
+S1,New Home Supplier 2,home22@g.com,active
 S2,Living Sdn Bhd,living@sdn.com,active
-S3,New Sdn Bhd,new@sdn.com,active
-S4,New Sdn Bhd,new@sdn.com,active
+S3,New Home Supplier,home@g.com,active
+S4,Boost House Supp,boosthousesupp@g.com,active
+S5,Fast Sdn Bhd,fast@sdn.com,active

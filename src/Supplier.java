@@ -369,6 +369,7 @@ public class Supplier implements Config{
             if (this.id.equals(supp.getCurrentSupplier()[0])){ 
                 supplierArr[ind] = new Supplier(supplierId, newSupplierName, newSupplierEmail, status);
                 isEditted = true;
+                break;
             }
             ind ++;
         }
@@ -391,15 +392,14 @@ public class Supplier implements Config{
         // Get array of suppliers
         Supplier [] supplierArr = this.getSupplierList();
         Boolean isDeleted = false;
-        int ind =0;
         
         // Loop to find the supplier ID and delete
         for (Supplier supp : supplierArr){
             if (this.id.equals(supp.getCurrentSupplier()[0])){ 
                 supp.setCurrentSupplier(this.name, this.email, "deleted");
                 isDeleted = true;
+                break;
             }
-            ind ++;
         }
         
         // Write to file if deletion take place
