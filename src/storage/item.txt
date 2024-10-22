@@ -7,3 +7,6 @@ I6,calendar,25,14,S2,active
 I7,lamp,30,20,S4,active
 I8,oven,35,18,S4,active
 I9,calendar,25,14,S3,active
+I10,test item,25,14,S2,active
+I11,carpet,30,20,S5,active
+I12,whiteboard,35,18,S5,active
