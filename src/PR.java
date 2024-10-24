@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
 
 
 public class PR extends PRItems{
-    private Item [] items;
+//    private Item [] items;
 //    private User user;
-    private String prId, timestamp, dueDate, status;
+    private String timestamp, dueDate, status;
     private String prF = BASE_DIR + "pr.txt";
     
     PR(){
@@ -22,23 +22,23 @@ public class PR extends PRItems{
     }
     
     private PR(String prId, String timestamp, String dueDate, String status){
-        this.prId = prId;
+        super.setPRId(prId);
         this.timestamp = timestamp;
         this.dueDate = dueDate;
         this.status = status;
     }
     
     public String [] getCurrentPR(){
-        String [] prInfo = {this.prId, this.timestamp, this.dueDate, this.status};
+        String [] prInfo = {super.getPRId(), this.timestamp, this.dueDate, this.status};
         return prInfo;
     }
     
     public void setItems(Item [] items){
-        this.items = items;
+        super.setPRItems(items);        
     }
     
     public Item [] getItems(){
-        return this.items;
+        return super.getPRItems();
     }
     
     public void setUser(){
@@ -47,7 +47,8 @@ public class PR extends PRItems{
     
     public String createPR(){
         try{
-            if (this.items == null || this.items.length == 0){
+            Item [] prItems = this.getItems();
+            if (prItems == null || prItems.length == 0){
                 throw new Exception("Empty items");
             }
             String prId = this.generateNewId();
@@ -73,7 +74,7 @@ public class PR extends PRItems{
             prFw.close();
 
             // Update PRItems
-            super.setPRItems(prId, items);
+            super.setPRId(prId);
             super.createPrItems();
             
             return prId;
@@ -84,21 +85,21 @@ public class PR extends PRItems{
     }
     
     public void editReorderAmt(Item item, int newReorderAmt) throws Exception{
-        super.setPRId(this.prId);
+
         String itemId = item.getItemInfo()[0];
         
         super.editReorderAmt(itemId, newReorderAmt);
     }
     
     public void deletePRItem(Item item) throws Exception{
-        super.setPRId(this.prId);
+
         String itemId = item.getItemInfo()[0];
         
         super.deletePRItem(itemId);
     }
     
     public void deletePR() throws Exception{
-        Item [] itemsPr = this.getPrItems();
+        Item [] itemsPr = this.getPrItemsRecords();
         
         for (Item item : itemsPr){
             this.deletePRItem(item);
@@ -108,9 +109,10 @@ public class PR extends PRItems{
         PR [] prList = pr.getPRList();
         PR [] newPrList = new PR[prList.length-1];
         int ind = 0;
+        String prId = super.getPRId();
         
         for (PR prtmp : prList){
-            if (this.prId.equals(prtmp.getCurrentPR()[0])){
+            if (prId.equals(prtmp.getCurrentPR()[0])){
                 continue;
             }
             newPrList[ind] = prtmp;
@@ -149,7 +151,7 @@ public class PR extends PRItems{
                 String prId = prInfo[0];
                 PR pr = new PR(prId, prInfo[2], prInfo[3], prInfo[4]);
                 super.setPRId(prId);
-                Item [] itemsPR = super.getPrItems();
+                Item [] itemsPR = super.getPrItemsRecords();
                 pr.setItems(itemsPR);
                 
                 // set user

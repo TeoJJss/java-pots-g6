@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 
@@ -9,13 +8,20 @@ abstract class PRItems implements Config{
     private Item [] items;
     private String prItemF = BASE_DIR + "pr_items.txt";
     
-    public void setPRItems(String prId, Item [] items){
-        this.prId = prId;
+    public void setPRItems(Item [] items){
         this.items = items;
     }
     
     public void setPRId(String prId){
         this.prId = prId;
+    }
+    
+    public String getPRId(){
+        return this.prId;
+    }
+    
+    public Item [] getPRItems(){
+        return this.items;
     }
     
     /* Get PR_Items count by current PR ID */
@@ -42,7 +48,7 @@ abstract class PRItems implements Config{
     }
     
     /* Get PR_Items by current PR ID */
-    public Item [] getPrItems(){
+    public Item [] getPrItemsRecords(){
         int count = this.getNumberOfPrItems();
         Item [] prItems = new Item[count];
         int ind = 0;
