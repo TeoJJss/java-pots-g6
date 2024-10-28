@@ -138,9 +138,7 @@ public class ItemSales extends Item {
     public int getSalesByItemId(String startDateStr, String endDateStr){
         try{
             String row;
-            int count = this.getNumberOfSalesRecords();
-            ItemSales [] itemSalesRecords = new ItemSales[count];
-            int ind = 0;
+            
             int itemSales = 0;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate startDate = LocalDate.parse(startDateStr, formatter);
