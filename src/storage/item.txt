@@ -1,12 +1,26 @@
-I1,fans,21,10,S1,active
-I2,table,30,20,S2,active
-I3,desk,35,18,S2,active
-I4,lamp,30,20,S3,active
-I5,oven,35,18,S3,active
-I6,calendar,25,14,S2,active
-I7,lamp,30,20,S4,active
-I8,oven,35,18,S4,active
-I9,calendar,25,14,S3,active
-I10,test item,25,14,S2,active
-I11,carpet,30,20,S5,active
-I12,whiteboard,35,18,S5,active
+I1,Powerbank,100,10,S4,active
+I2,Table,30,20,S1,active
+I3,Desk,35,18,S1,active
+I4,Lamp,30,20,S3,active
+I5,Oven,35,18,S3,active
+I6,Chair,25,14,S1,active
+I7,Earphones,30,20,S4,active
+I8,Camera,35,18,S4,active
+I9,Microwave,25,14,S3,active
+I10,Tablet,25,14,S4,active
+I11,Speaker,30,20,S4,active
+I12,Charger,35,18,S5,active
+I13,Extension Plug,10,15,S5,active
+I14,Shelf,5,10,S1,active
+I15,Blender,20,10,S3,active
+I16,Vacuum Cleaner,30,10,S3,active
+I17,Water Dispenser,12,10,S3,active
+I18,Carpet,30,10,S1,active
+I19,Pillows,50,15,S1,active
+I20,Laptop,30,10,S2,active
+I21,Phone,13,15,S2,active
+I22,Broom,20,10,S5,active
+I23,Router,40,10,S2,active
+I24,Hangers,50,20,S5,active
+I25,Hamper,20,10,S5,active
+
