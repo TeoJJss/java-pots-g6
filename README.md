@@ -4,6 +4,13 @@ Upload Java files in `src/` folder.
 Upload txt files in `src/storage/` folder.  
 
 ## Txt file content
+**user.txt**  
+`col 1` : user ID (unique)  
+`col 2` : user name   
+`col 3` : password  
+`col 4` : user role [SM, PM, IM, FM, AM]  
+`col 5` : status [active, deleted]  
+
 **supplier.txt**  
 `col 1` : supplier ID (unique)  
 `col 2` : supplier name   
