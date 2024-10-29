@@ -14,6 +14,7 @@ public class ItemSales extends Item {
     private final String SALES_FILE = BASE_DIR + "item_sales.txt";
     private File itemSalesF = new File(SALES_FILE);
     
+    /* Constructors */
     ItemSales(){
         
     }
@@ -23,10 +24,12 @@ public class ItemSales extends Item {
         this.date = date;
     }
     
+    /* Set sales record */
     public void setItemSales(int sales){
         this.sales = sales;
     }
     
+    /* Return info in an array */
     public String [] getItemSalesInfo(){
         String itemId = super.getItemId();
         String sales = String.valueOf(this.sales);
@@ -35,6 +38,7 @@ public class ItemSales extends Item {
         return itemSalesInfo;
     }
     
+    /* return item object based on item id */
     public Item getItem(){
         String itemId = super.getItemId();
         Item item = super.getItemById(itemId);
@@ -42,6 +46,7 @@ public class ItemSales extends Item {
         return item;
     }
     
+    /* Sales entry */
     public void addSalesRecord() throws Exception{
         // Get current date
         LocalDateTime now = LocalDateTime.now();
@@ -174,7 +179,7 @@ public class ItemSales extends Item {
         }
     }
     
-    public int getNumberOfSalesRecords(){
+    private int getNumberOfSalesRecords(){
         try{
             FileReader salesFr = new FileReader(this.itemSalesF);
             BufferedReader salesBr = new BufferedReader(salesFr);

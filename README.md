@@ -41,3 +41,10 @@ Upload txt files in `src/storage/` folder.
 `col 1` : PR ID (foreign)  
 `col 2` : item ID (foreign)   
 `col 3` : reorder amount   
+
+**po.txt**  
+`col 1` : PO ID (unique)  
+`col 2` : PR ID (foreign)   
+`col 3` : user ID (foreign)  
+`col 4` : created timestamp  
+`col 5` : status [pending, approved, rejected, paid]  
