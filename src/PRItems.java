@@ -6,7 +6,7 @@ import java.io.FileWriter;
 abstract class PRItems implements Config{
     private String prId;
     private Item [] items;
-    private String prItemF = BASE_DIR + "pr_items.txt";
+    private final String prItemF = BASE_DIR + "pr_items.txt";
     
     public void setPRItems(Item [] items){
         this.items = items;
