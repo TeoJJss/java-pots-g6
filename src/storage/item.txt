@@ -23,4 +23,3 @@ I22,Broom,20,10,S5,active
 I23,Router,40,10,S2,active
 I24,Hangers,50,20,S5,active
 I25,Hamper,20,10,S5,active
-
