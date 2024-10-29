@@ -3,6 +3,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Item implements Config {
     private String itemId, itemName, status;
@@ -17,17 +21,17 @@ public class Item implements Config {
     }
     
     /* Consctructor for new item (without ID) */
-    Item(String itemName, int quanity, int reorderLevel){
+    Item(String itemName, int quantity, int reorderLevel){
         this.itemName = itemName;
-        this.quantity = quanity;
+        this.quantity = quantity;
         this.reorderLevel = reorderLevel;
     }
     
     /* Constructor for private use (with ID) */
-    private Item(String itemId,String itemName, int quanity, int reorderLevel, String status){
+    private Item(String itemId,String itemName, int quantity, int reorderLevel, String status){
         this.itemId = itemId;
         this.itemName = itemName;
-        this.quantity = quanity;
+        this.quantity = quantity;
         this.reorderLevel = reorderLevel;
         this.status = status;
     }
@@ -55,6 +59,17 @@ public class Item implements Config {
         return this.supplier;
     }
     
+    /*Get quantity for item*/
+    public int getQuantity(){
+        return this.quantity;
+    }
+    
+    /*Get reorder level*/
+    public int getReorderLevel(){
+        return this.reorderLevel;
+    }
+    
+    
     /* Get item info of current object */
     public String [] getItemInfo(){
         String [] itemInfo = {this.itemId, this.itemName, String.valueOf(this.quantity), String.valueOf(this.reorderLevel), this.status};
@@ -81,6 +96,37 @@ public class Item implements Config {
             return null;
         }
     }
+    
+    /*Retrieve items with quantity below reorderLevel*/
+    public void getLowItemList() {
+        try {
+            Item[] items = this.getItemList();
+            if (items == null || items.length == 0) {
+                throw new Exception("No items available");
+            }
+
+            List<Item> lowStockItems = new ArrayList<>();
+            for (Item item : items) {
+                if (item.quantity < item.reorderLevel) {
+                    lowStockItems.add(item);
+                }
+            }
+
+            if (lowStockItems.isEmpty()) {
+                System.out.println("No items below reorder level.");
+            } else {
+                System.out.println("Items with quantity below reorder level:");
+                for (Item item : lowStockItems) {
+                    System.out.println("Item ID: " + item.itemId + ", Name: " + item.itemName + 
+                                       ", Quantity: " + item.getQuantity() + 
+                                       ", Reorder Level: " + item.getReorderLevel());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    
     
     /* set item obj by ID */
     public void setItemById(String itemId) throws Exception{
@@ -253,6 +299,223 @@ public class Item implements Config {
         }catch (Exception e){
             System.out.print(e);
         }
-    }   
+    }
     
+    /*Edit item details*/
+    public void editItem(String itemId, String newItemName, Integer newQuantity, Integer newReorderLevel) {
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(itemF));
+            String line;
+            boolean itemFound = false;
+
+            while ((line = reader.readLine()) != null) {
+                String[] itemInfo = line.split(",");
+
+                // Check if the current line has the itemId we want to edit
+                if (itemInfo[0].equals(itemId)) {
+                    itemFound = true;
+
+                    // Update item fields only if new values are provided
+                    if (newItemName != null && !newItemName.isEmpty()) {
+                        itemInfo[1] = newItemName;
+                    }
+                    if (newQuantity != null) {
+                        itemInfo[2] = String.valueOf(newQuantity);
+                    }
+                    if (newReorderLevel != null) {
+                        itemInfo[3] = String.valueOf(newReorderLevel);
+                    }
+
+                    // Recreate the modified line with updated item details
+                    line = String.join(",", itemInfo);
+                }
+                lines.add(line);
+            }
+            reader.close();
+
+            if (!itemFound) {
+                System.out.println("Item with ID " + itemId + " not found.");
+                return;
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(itemF));
+            for (String updatedLine : lines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+            writer.close();
+            System.out.println("Item with ID " + itemId + " updated successfully.");
+
+        } catch (IOException e) {
+            System.out.println("Error editing item: " + e.getMessage());
+        }
+    }
+
+    /* Change item status to deleted */
+    public void deleteItem(String itemId) {
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(itemF));
+            String line;
+            boolean itemFound = false;
+
+            while ((line = reader.readLine()) != null) {
+                String[] itemInfo = line.split(",");
+
+                // Check if the itemId we want to delete is valid
+                if (itemInfo[0].equals(itemId)) {
+                    itemFound = true;
+
+                    // Ask for confirmation before deleting
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print("Are you sure you want to delete the item with ID " + itemId + "? (yes to confirm, anything else to cancel): ");
+                    String confirmation = scanner.nextLine();
+
+                    if (!confirmation.equalsIgnoreCase("yes")) {
+                        System.out.println("Delete operation canceled.");
+                        return;
+                    }
+
+                    // Update the status to "deleted"
+                    itemInfo[5] = "deleted";
+                    line = String.join(",", itemInfo);  // recreate the modified line
+                }
+                lines.add(line);
+            }
+            reader.close();
+
+            if (!itemFound) {
+                System.out.println("Item with ID " + itemId + " not found.");
+                return;
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(itemF));
+            for (String updatedLine : lines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+            writer.close();
+            System.out.println("Item with ID " + itemId + " marked as deleted.");
+
+        } catch (IOException e) {
+            System.out.println("Error deleting item: " + e.getMessage());
+        }
+        
+    }
+        
+    /*Update Item List*/    
+    private void updateItems() {
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(itemF));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] itemInfo = line.split(",");
+
+                // Check if the current line has the itemId we want to update
+                if (itemInfo[0].equals(this.itemId)) {
+                    itemInfo[2] = String.valueOf(this.quantity);  // Update the quantity
+                    line = String.join(",", itemInfo);  // Recreate the modified line
+                }
+                lines.add(line);
+            }
+            reader.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(itemF));
+            for (String updatedLine : lines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+            writer.close();
+            System.out.println("File updated successfully.");
+
+        } catch (IOException e) {
+            System.out.println("Error updating item file: " + e.getMessage());
+        }
+    }
+        
+    /* Method to submit item sales and decrease quantity */
+    public void submitItemSales(int sales) {
+        if (sales > quantity) {
+            System.out.println("Insufficient stock to complete sale.");
+            return;
+        }
+        this.quantity -= sales;
+        System.out.println("Sales submitted. Updated quantity: " + this.quantity);
+
+        // Update the file
+        updateItems();
+    }
+
+    // Method to submit new stock and increase quantity
+    public void submitNewStock(int addAmt) {
+        this.quantity += addAmt;
+        System.out.println("Stock added. Updated quantity: " + this.quantity);
+
+        // Update the file
+        updateItems();
+    }
+
+private static Item loadItemById(String itemId) {
+    try {
+        BufferedReader reader = new BufferedReader(new FileReader(BASE_DIR + "item.txt"));
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            String[] itemInfo = line.split(",");
+            if (itemInfo[0].equals(itemId)) {
+                // Assuming itemInfo format: itemId, itemName, quantity, reorderLevel, supplierId, status
+                String itemName = itemInfo[1];
+                int quantity = Integer.parseInt(itemInfo[2]);
+                int reorderLevel = Integer.parseInt(itemInfo[3]);
+                String status = itemInfo[5];
+                reader.close();
+                return new Item(itemId, itemName, quantity, reorderLevel, status);
+            }
+        }
+        reader.close();
+    } catch (IOException e) {
+        System.out.println("Error reading item file: " + e.getMessage());
+    }
+    return null; // Return null if item not found
+    
+}
+    
+    /* for testing */
+    public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+
+    // Prompt user to enter item ID
+    System.out.print("Enter Item ID to manage: ");
+    String itemId = scanner.nextLine();
+
+    // Load the item from the file
+    Item item = loadItemById(itemId);
+    if (item == null) {
+        System.out.println("Item with ID " + itemId + " not found.");
+        scanner.close();
+        return;
+    }
+
+    System.out.println("Choose an operation: \n1. Submit Item Sales\n2. Submit New Stock");
+    int choice = scanner.nextInt();
+
+    if (choice == 1) {
+        System.out.print("Enter sales quantity: ");
+        int sales = scanner.nextInt();
+        item.submitItemSales(sales);
+
+    } else if (choice == 2) {
+        System.out.print("Enter stock amount to add: ");
+        int addAmt = scanner.nextInt();
+        item.submitNewStock(addAmt);
+
+    } else {
+        System.out.println("Invalid choice.");
+    }
+
+    scanner.close();
+    }
 }
