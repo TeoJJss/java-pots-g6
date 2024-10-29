@@ -401,6 +401,14 @@ public class Supplier implements Config{
                 break;
             }
         }
+        // delete all items associated with the supplier
+        Item [] supplierItems = this.getCurrentSupplierItems();
+        for (Item item : supplierItems){
+            if (item != null){
+                item.deleteItem();
+            }
+            
+        }
         
         // Write to file if deletion take place
         if (isDeleted){

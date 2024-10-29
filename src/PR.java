@@ -61,6 +61,13 @@ public class PR extends PRItems{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             String timestamp = now.format(formatter);
             
+            // Convert due date to date obj
+            LocalDateTime dueDateObj = LocalDateTime.parse(this.dueDate);
+            
+            if (dueDateObj.isBefore(now)){
+                throw new Exception("Invalid due date");
+            }
+            
             if (this.user == null){
                 throw new Exception("Empty user");
             }
