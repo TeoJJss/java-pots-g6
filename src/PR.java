@@ -36,6 +36,10 @@ public class PR extends PRItems{
         super.setPRItems(items);        
     }
     
+    public String getStatus(){
+        return this.status;
+    }
+    
     public Item [] getItems(){
         return super.getPRItems();
     }
@@ -98,6 +102,7 @@ public class PR extends PRItems{
         }
     }
     
+    /* Edit reorder amount of an item (used in PO) */
     public void editReorderAmt(Item item, int newReorderAmt) throws Exception{
 
         String itemId = item.getItemId();
@@ -194,7 +199,6 @@ public class PR extends PRItems{
         int count = 0;
         if (prList.length != 0){
             String lastPRId = prList[prList.length-1].getPRId();
-            System.out.println("Last; " + lastPRId);
             count = Integer.parseInt(lastPRId.replace("PR", ""));
         }
         count++;

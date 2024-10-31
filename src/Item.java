@@ -453,29 +453,4 @@ public class Item implements Config {
         updateItems();
     }
 
-    private static Item loadItemById(String itemId) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(BASE_DIR + "item.txt"));
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                String[] itemInfo = line.split(",");
-                if (itemInfo[0].equals(itemId)) {
-                    // Assuming itemInfo format: itemId, itemName, quantity, reorderLevel,
-                    // supplierId, status
-                    String itemName = itemInfo[1];
-                    int quantity = Integer.parseInt(itemInfo[2]);
-                    int reorderLevel = Integer.parseInt(itemInfo[3]);
-                    String status = itemInfo[5];
-                    reader.close();
-                    return new Item(itemId, itemName, quantity, reorderLevel, status);
-                }
-            }
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("Error reading item file: " + e.getMessage());
-        }
-        return null; // Return null if item not found
-
-    }
 }
