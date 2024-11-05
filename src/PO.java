@@ -91,6 +91,8 @@ public class PO implements Config {
                 
                 // set PR in PO
                 String prId = poInfo[1];
+                PR poPR = new PR().getPRByID(prId);
+                po.setPR(poPR);
                 
                 // set User in PO
                 String userId = poInfo[2];
@@ -160,6 +162,6 @@ public class PO implements Config {
         poFw.close();
         
         // Change PR status to approved
-        
+        this.pr.updatePRStatus("approved");
     }
 }

@@ -212,6 +212,7 @@ public class PR extends PRItems{
     }
        
     /*Generate new PR ID*/
+    @Override
     public String generateNewId(){
         // Get the last PR ID
         PR [] prList = this.getPRList();
