@@ -11,9 +11,10 @@ import java.time.format.DateTimeFormatter;
 public class ItemSales extends Item {
     private String date;
     private int sales;
-    private final String SALES_FILE = BASE_DIR + "item_sales.txt";
-    private File itemSalesF = new File(SALES_FILE);
+    private static final String SALES_FILE = BASE_DIR + "item_sales.txt";
+    private static File itemSalesF = new File(SALES_FILE);
     
+    /* Constructors */
     ItemSales(){
         
     }
@@ -23,10 +24,12 @@ public class ItemSales extends Item {
         this.date = date;
     }
     
+    /* Set sales record */
     public void setItemSales(int sales){
         this.sales = sales;
     }
     
+    /* Return info in an array */
     public String [] getItemSalesInfo(){
         String itemId = super.getItemId();
         String sales = String.valueOf(this.sales);
@@ -35,6 +38,7 @@ public class ItemSales extends Item {
         return itemSalesInfo;
     }
     
+    /* return item object based on item id */
     public Item getItem(){
         String itemId = super.getItemId();
         Item item = super.getItemById(itemId);
@@ -42,6 +46,7 @@ public class ItemSales extends Item {
         return item;
     }
     
+    /* Sales entry */
     public void addSalesRecord() throws Exception{
         // Get current date
         LocalDateTime now = LocalDateTime.now();
@@ -57,7 +62,7 @@ public class ItemSales extends Item {
         sb.append(itemId).append(",").append(this.sales).append(",").append(currentDate).append("\n");
         
         // Add to file
-        FileWriter salesFw = new FileWriter(this.itemSalesF, true);
+        FileWriter salesFw = new FileWriter(itemSalesF, true);
         BufferedWriter salesBw = new BufferedWriter(salesFw);
         salesBw.write(sb.toString());
         salesBw.close();
@@ -68,11 +73,11 @@ public class ItemSales extends Item {
     public ItemSales [] getSalesRecordsList(){
         try{
             String row;
-            int count = this.getNumberOfSalesRecords();
+            int count = getNumberOfSalesRecords();
             ItemSales [] itemSalesRecords = new ItemSales[count];
             int ind = 0;
             
-            FileReader salesFr = new FileReader(this.itemSalesF);
+            FileReader salesFr = new FileReader(itemSalesF);
             BufferedReader salesBr = new BufferedReader(salesFr);
             while((row=salesBr.readLine())!=null){
                 String [] salesInfo = row.split(",");
@@ -93,18 +98,18 @@ public class ItemSales extends Item {
         }
     }
     
-    /* Get sales between two dates */
-    public ItemSales [] getSalesRecordsList(String startDateStr, String endDateStr){
+    /* Get all sales between two dates */
+    public static ItemSales [] getSalesRecordsList(String startDateStr, String endDateStr){
         try{
             String row;
-            int count = this.getNumberOfSalesRecords();
+            int count =getNumberOfSalesRecords();
             ItemSales [] itemSalesRecords = new ItemSales[count];
             int ind = 0;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate startDate = LocalDate.parse(startDateStr, formatter);
             LocalDate endDate = LocalDate.parse(endDateStr, formatter);
             
-            FileReader salesFr = new FileReader(this.itemSalesF);
+            FileReader salesFr = new FileReader(itemSalesF);
             BufferedReader salesBr = new BufferedReader(salesFr);
             while((row=salesBr.readLine())!=null){
                 String [] salesInfo = row.split(",");
@@ -135,7 +140,7 @@ public class ItemSales extends Item {
     }
     
     /* Get sales of an item id between two dates */
-    public int getSalesByItemId(String startDateStr, String endDateStr){
+    public int getSalesByItem(String startDateStr, String endDateStr){
         try{
             String row;
             
@@ -144,7 +149,7 @@ public class ItemSales extends Item {
             LocalDate startDate = LocalDate.parse(startDateStr, formatter);
             LocalDate endDate = LocalDate.parse(endDateStr, formatter);
             
-            FileReader salesFr = new FileReader(this.itemSalesF);
+            FileReader salesFr = new FileReader(itemSalesF);
             BufferedReader salesBr = new BufferedReader(salesFr);
             while((row=salesBr.readLine())!=null){
                 String [] salesInfo = row.split(",");
@@ -174,9 +179,9 @@ public class ItemSales extends Item {
         }
     }
     
-    public int getNumberOfSalesRecords(){
+    private static int getNumberOfSalesRecords(){
         try{
-            FileReader salesFr = new FileReader(this.itemSalesF);
+            FileReader salesFr = new FileReader(itemSalesF);
             BufferedReader salesBr = new BufferedReader(salesFr);
             int count = 0;
             while(salesBr.readLine() != null){

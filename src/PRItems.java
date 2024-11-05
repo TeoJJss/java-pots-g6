@@ -69,7 +69,7 @@ abstract class PRItems implements Config{
                 int reorderAmt = Integer.parseInt(prItemInfo[2]);
                 
                 // Get Item by Id (also set reorderAmt), after that append to array
-                Item item = new Item().getItemById(itemId);
+                Item item = Item.getItemById(itemId);
                 item.setReorderAmt(reorderAmt);
                 prItems[ind] = item;
                 

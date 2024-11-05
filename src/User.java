@@ -94,7 +94,7 @@ public class User implements Config {
     }
 
     // Get user info by ID
-    public User getUserById(String userId) {
+    public static User getUserById(String userId) {
         User targetUser = null;
 
         User[] userList = User.getUserList();

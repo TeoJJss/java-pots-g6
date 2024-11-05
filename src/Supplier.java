@@ -6,8 +6,8 @@ import java.io.FileWriter;
 
 public class Supplier implements Config{
     private String id, name, email, status;
-    private final String SUPPLIER_FILE = BASE_DIR + "supplier.txt";
-    private File supplierF = new File(SUPPLIER_FILE);
+    private static final String SUPPLIER_FILE = BASE_DIR + "supplier.txt";
+    private static File supplierF = new File(SUPPLIER_FILE);
     private Item [] items;
     
     /* Default constructor */
@@ -56,6 +56,10 @@ public class Supplier implements Config{
         return supplierInfo;
     }
     
+    public String getSupplierId(){
+        return this.id;
+    }
+    
     /* Get info of current Supplier's items */
     public Item [] getCurrentSupplierItems(){
         return this.items;
@@ -63,14 +67,14 @@ public class Supplier implements Config{
     
     /* Check supplier if exist */
     private Boolean validateSupplierId(String id){
-        String [] supplier = this.getSupplierInfoById(id);
+        String [] supplier = getSupplierInfoById(id);
         return supplier != null;
     }
     
     /* Vakidate current supplier obj */
     public Boolean validateSupplier(){
         try{
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             String row;
             while ((row=supplierBr.readLine()) != null){
@@ -95,9 +99,9 @@ public class Supplier implements Config{
     }
     
     /* Get number of Suppliers in file */
-    private int getNumberOfSuppliers(){
+    private static int getNumberOfSuppliers(){
         try{
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             int count = 0;
             while (supplierBr.readLine() != null){
@@ -113,9 +117,9 @@ public class Supplier implements Config{
     }
     
     /* Get number of Suppliers in file */
-    private int getNumberOfActiveSuppliers(){
+    private static int getNumberOfActiveSuppliers(){
         try{
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             int count = 0;
             String row;
@@ -135,8 +139,9 @@ public class Supplier implements Config{
     }
     
     /* Generate unique supplierID */
+    @Override
     public String generateNewId(){
-        int count = this.getNumberOfSuppliers();
+        int count = getNumberOfSuppliers();
         count++;
         String supplierId = "S"+count;
         
@@ -144,11 +149,11 @@ public class Supplier implements Config{
     }
     
     /* Get list of suppliers */
-    public Supplier [] getSupplierList(){
+    public static Supplier [] getSupplierList(){
         try{
             
             // Get number of rows in the file
-            int count = this.getNumberOfSuppliers();
+            int count = getNumberOfSuppliers();
             if (count < 1){
                 throw new Exception("No supplier data");
             }
@@ -159,7 +164,7 @@ public class Supplier implements Config{
             // Enter data into array
             String row;
             int ind = 0;
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             while ((row=supplierBr.readLine()) != null){
                 // Add data from txt to array
@@ -172,7 +177,7 @@ public class Supplier implements Config{
                 supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
                 
                 // get the supplier's items
-                Item [] itemList = new Item().getItemList(supplierId);
+                Item [] itemList = Item.getItemList();
                 supplierArr[ind].items = itemList;
                 
                 ind++;
@@ -187,11 +192,11 @@ public class Supplier implements Config{
     }
     
     /* Get list of active suppliers */
-    public Supplier [] getActiveSupplierList(){
+    public static Supplier [] getActiveSupplierList(){
         try{
             
             // Get number of rows in the file
-            int count = this.getNumberOfActiveSuppliers();
+            int count = getNumberOfActiveSuppliers();
             if (count < 1){
                 throw new Exception("No active supplier data");
             }
@@ -202,7 +207,7 @@ public class Supplier implements Config{
             // Enter data into array
             String row;
             int ind = 0;
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             while ((row=supplierBr.readLine()) != null){
                 // Add data from txt to array
@@ -219,7 +224,7 @@ public class Supplier implements Config{
                 supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
                 
                 // get the supplier's items
-                Item [] itemList = new Item().getItemList(supplierId);
+                Item [] itemList = Item.getItemList(supplierId);
                 supplierArr[ind].items = itemList;
                 
                 ind++;
@@ -234,9 +239,9 @@ public class Supplier implements Config{
     }
     
     /* Get Supplier Info by ID */
-    public String [] getSupplierInfoById(String id){
+    public static String [] getSupplierInfoById(String id){
         try{
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             String row;
             String [] supplier = new String[4];
@@ -358,7 +363,7 @@ public class Supplier implements Config{
         }
         
         // Get array of suppliers
-        Supplier [] supplierArr = this.getSupplierList();
+        Supplier [] supplierArr = getSupplierList();
         Boolean isEditted = false;
         int ind = 0;
         
@@ -390,7 +395,7 @@ public class Supplier implements Config{
         }
         
         // Get array of suppliers
-        Supplier [] supplierArr = this.getSupplierList();
+        Supplier [] supplierArr = getSupplierList();
         Boolean isDeleted = false;
         
         // Loop to find the supplier ID and delete
@@ -415,6 +420,47 @@ public class Supplier implements Config{
             this.upSupplierFile(supplierArr);
         }else{
             throw new Exception("Fail to delete");
+        }
+    }
+    
+    public static Supplier getSupplierById(String supplierId){
+        Supplier targetSupplier = null;
+        Supplier [] supplierList = getSupplierList();
+        
+        for (Supplier supplier : supplierList){
+            if (supplier.getSupplierId().equals(supplierId)){
+                targetSupplier = supplier;
+                System.out.println(supplierId);
+                break;
+            }
+        }
+        
+        return targetSupplier;
+    }
+    
+    /* Get payment history of current supplier */
+    public PO [] getSupplierPaymentHistory(){
+        try {
+            PO [] poList = new PO().getPOList();
+            PO [] supplierPO = new PO[poList.length];
+            int ind = 0;
+            
+            // check if this supplier involve in the PO
+            for (PO po: poList){
+                Item [] poItems = po.getPOItems();
+                for (Item item : poItems){
+                    if(item.getSupplier().getSupplierId().equals(this.id)){
+                        supplierPO[ind] = po;
+                        ind++;
+                        break;
+                    }
+                }
+            }
+            
+            return supplierPO;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
         }
     }
 }
