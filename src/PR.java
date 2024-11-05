@@ -75,7 +75,7 @@ public class PR extends PRItems{
             String timestamp = now.format(formatter);
             
             // Convert due date to date obj
-            LocalDateTime dueDateObj = LocalDateTime.parse(this.dueDate);
+            LocalDateTime dueDateObj = LocalDateTime.parse(this.dueDate, formatter);
             
             if (dueDateObj.isBefore(now)){
                 throw new Exception("Invalid due date");
@@ -250,30 +250,12 @@ public class PR extends PRItems{
     /*return PR based on ID requested*/
     public PR getPRByID(String prId) {
         try {
-            FileReader prFr = new FileReader(this.prF);
-            BufferedReader prBr = new BufferedReader(prFr);
-            String row;
-
-            while ((row = prBr.readLine()) != null) {
-                String[] prInfo = row.split(",");
-                /*check row to look for ID requested*/
-                if (prInfo[0].equals(prId)) {
-                    PR prByID = new PR(prInfo[0], prInfo[2], prInfo[3], prInfo[4]);
-                    super.setPRId(prId);
-                    Item[] itemsPR = super.getPrItemsRecords();
-                    prByID.setItems(itemsPR);
-                    
-                    
-                    String userId = prInfo[1];
-                    prByID.setUser(new User().getUserById(userId));
-                
-                    prBr.close();
-                    prFr.close();
-                    return prByID;
+            PR [] prList = this.getPRList();
+            for (PR pr : prList){
+                if (pr.getPRId().equals(prId)){
+                    return pr;
                 }
             }
-            prBr.close();
-            prFr.close();
             
         } catch (Exception e) {
             System.out.println("An error occurred: " + e);
@@ -287,27 +269,18 @@ public class PR extends PRItems{
         /*check if status is approved or rejected*/
         if (!newStatus.equals("approved") && !newStatus.equals("rejected")) {
             System.out.println("Invalid status. Status should be either 'approved' or 'rejected'.");
-            return;
+            throw new Exception("Invalid status. Status should be either 'approved' or 'rejected'.");
         }
-            
-        StringBuffer sb = new StringBuffer();
-        FileReader prFr = new FileReader(this.prF);
-        BufferedReader prBr = new BufferedReader(prFr);
-        String row;
-
-        while ((row = prBr.readLine()) != null) {
-            String[] prInfo = row.split(",");
-            if (prInfo[0].equals(super.getPRId())) {
-                prInfo[4] = newStatus;                                 
+        String targetPrId = super.getPRId();
+        PR [] prList = this.getPRList();
+        for (PR pr : prList){
+            if (pr.getPRId().equals(targetPrId)){
+                pr.status = newStatus;
+                break;
             }
-            sb.append(String.join(",", prInfo)).append("\n");
         }
-        prBr.close();
-        prFr.close();
-        FileWriter prFw = new FileWriter(this.prF);
-        BufferedWriter prBw = new BufferedWriter(prFw);
-        prBw.write(sb.toString());
-        prBw.close();
-        prFw.close();
+        
+        // Update to txt file
+        this.upPRFile(prList);
     }
 }
