@@ -88,7 +88,7 @@ public class PO implements Config {
                 
                 // set User in PO
                 String userId = poInfo[2];
-                User creator = new User().getUserById(userId);
+                User creator = User.getUserById(userId);
                 if (creator == null){
                     throw new Exception("Invalid user for " + poId);
                 }

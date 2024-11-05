@@ -67,14 +67,14 @@ public class Supplier implements Config{
     
     /* Check supplier if exist */
     private Boolean validateSupplierId(String id){
-        String [] supplier = this.getSupplierInfoById(id);
+        String [] supplier = getSupplierInfoById(id);
         return supplier != null;
     }
     
     /* Vakidate current supplier obj */
     public Boolean validateSupplier(){
         try{
-            FileReader supplierFr = new FileReader(this.supplierF);
+            FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);
             String row;
             while ((row=supplierBr.readLine()) != null){
@@ -224,7 +224,7 @@ public class Supplier implements Config{
                 supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
                 
                 // get the supplier's items
-                Item [] itemList = new Item().getItemList(supplierId);
+                Item [] itemList = Item.getItemList(supplierId);
                 supplierArr[ind].items = itemList;
                 
                 ind++;
@@ -239,7 +239,7 @@ public class Supplier implements Config{
     }
     
     /* Get Supplier Info by ID */
-    public String [] getSupplierInfoById(String id){
+    public static String [] getSupplierInfoById(String id){
         try{
             FileReader supplierFr = new FileReader(supplierF);
             BufferedReader supplierBr = new BufferedReader(supplierFr);

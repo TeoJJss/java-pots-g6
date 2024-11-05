@@ -196,7 +196,7 @@ public class Item implements Config {
                 String supplierId = itemInfo[4];
                 String itemStatus = itemInfo[5];
                 
-                String [] supplierInfo = new Supplier().getSupplierInfoById(supplierId);
+                String [] supplierInfo = Supplier.getSupplierInfoById(supplierId);
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
                 String supplierStatus = supplierInfo[3];
@@ -247,7 +247,7 @@ public class Item implements Config {
                     continue;
                 }
                 
-                String [] supplierInfo = new Supplier().getSupplierInfoById(supplierId);
+                String [] supplierInfo = Supplier.getSupplierInfoById(supplierId);
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
                 String supplierStatus = supplierInfo[3];
@@ -269,7 +269,7 @@ public class Item implements Config {
     }
 
     /* Get item list of a supplier */
-    public Item[] getItemList(String supplierId) {
+    public static Item[] getItemList(String supplierId) {
         try {
             // Count number of items
             int count = getNumberOfItems();
@@ -297,10 +297,12 @@ public class Item implements Config {
                 int reorderLevel = Integer.parseInt(itemInfo[3]);
                 String itemStatus = itemInfo[5];
 
-                String[] supplierInfo = new Supplier().getSupplierInfoById(supplierId);
+                String[] supplierInfo = Supplier.getSupplierInfoById(supplierId);
                 String supplierName = supplierInfo[1];
                 String supplierEmail = supplierInfo[2];
                 String supplierStatus = supplierInfo[3];
+                
+                // Set Supplier in Item
                 Supplier itemSupplier = new Supplier();
                 itemSupplier.setCurrentSupplier(supplierId, supplierName, supplierEmail, supplierStatus);
 
