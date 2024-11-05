@@ -11,8 +11,8 @@ public class Item implements Config {
     private String itemId, itemName, status;
     private int quantity, reorderLevel, reOrderAmt;
     private Supplier supplier;
-    private final String ITEM_FILE = BASE_DIR + "item.txt";
-    private File itemF = new File(ITEM_FILE);
+    private static final String ITEM_FILE = BASE_DIR + "item.txt";
+    private static File itemF = new File(ITEM_FILE);
     
     /* Default constructor */
     Item(){
@@ -76,9 +76,9 @@ public class Item implements Config {
         return itemInfo;
     }
     /* Get item info by ID */
-    public Item getItemById(String itemId){
+    public static Item getItemById(String itemId){
         try{
-            Item [] items = this.getItemList();
+            Item [] items = getItemList();
             if (items == null){
                 throw new Exception("Empty Item list");
             }
@@ -96,9 +96,9 @@ public class Item implements Config {
     }
 
     /* Retrieve items with quantity below reorderLevel */
-    public List <Item> getLowItemList() {
+    public static List <Item> getLowItemList() {
         try {
-            Item[] items = this.getItemList();
+            Item[] items = getItemList();
             if (items == null || items.length == 0) {
                 throw new Exception("No items available");
             }
@@ -124,7 +124,7 @@ public class Item implements Config {
 
     /* set item obj by ID */
     public void setItemById(String itemId) throws Exception{
-        Item item = this.getItemById(itemId);
+        Item item = getItemById(itemId);
         if (item == null){
             throw new Exception("Empty Item");
         }
@@ -144,9 +144,9 @@ public class Item implements Config {
     }
     
     /* Get number of items in file */
-    private int getNumberOfItems(){
+    private static int getNumberOfItems(){
         try{
-            FileReader itemFr = new FileReader(this.itemF);
+            FileReader itemFr = new FileReader(itemF);
             BufferedReader itemBr = new BufferedReader(itemFr);
             int count = 0;
             while ((itemBr.readLine()) != null){
@@ -164,7 +164,7 @@ public class Item implements Config {
     /* Generate unique itemID */
     @Override
     public String generateNewId() {
-        int count = this.getNumberOfItems();
+        int count = getNumberOfItems();
         count++;
         String newItemId = "I"+count;
         
@@ -172,10 +172,10 @@ public class Item implements Config {
     }
 
     /* Get all items along with supplier information */
-    public Item [] getItemList(){
+    public static Item [] getItemList(){
         try{            
             // Count number of items
-            int count = this.getNumberOfItems();
+            int count = getNumberOfItems();
             if(count < 1){
                 throw new Exception("No item data");
             }
@@ -183,7 +183,7 @@ public class Item implements Config {
             Item [] itemList = new Item[count];
             
             // Read items
-            FileReader itemFr = new FileReader(this.itemF);
+            FileReader itemFr = new FileReader(itemF);
             BufferedReader itemBr = new BufferedReader(itemFr);
             String row;
             int ind = 0;
@@ -216,12 +216,63 @@ public class Item implements Config {
             return null;
         }
     }
+    
+    /* Get all items along with supplier information */
+    public static Item [] getActiveItemList(){
+        try{            
+            // Count number of items
+            int count = getNumberOfItems();
+            if(count < 1){
+                throw new Exception("No item data");
+            }
+            
+            Item [] itemList = new Item[count];
+            
+            // Read items
+            FileReader itemFr = new FileReader(itemF);
+            BufferedReader itemBr = new BufferedReader(itemFr);
+            String row;
+            int ind = 0;
+            while ((row = itemBr.readLine()) != null){
+                String [] itemInfo = row.split(",");
+                String itemId = itemInfo[0];
+                String itemName = itemInfo[1];
+                int quantity = Integer.parseInt(itemInfo[2]);
+                int reorderLevel = Integer.parseInt(itemInfo[3]);
+                String supplierId = itemInfo[4];
+                String itemStatus = itemInfo[5];
+
+                // Skip deleted items
+                if (itemStatus.equals("deleted")){
+                    continue;
+                }
+                
+                String [] supplierInfo = new Supplier().getSupplierInfoById(supplierId);
+                String supplierName = supplierInfo[1];
+                String supplierEmail = supplierInfo[2];
+                String supplierStatus = supplierInfo[3];
+                Supplier itemSupplier = new Supplier();
+                itemSupplier.setCurrentSupplier(supplierId, supplierName, supplierEmail, supplierStatus);
+
+                itemList[ind] = new Item(itemId, itemName, quantity, reorderLevel, itemStatus);
+                itemList[ind].supplier = itemSupplier;
+                ind++;
+            }
+            itemBr.close();
+            itemFr.close();
+
+            return itemList;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
     /* Get item list of a supplier */
     public Item[] getItemList(String supplierId) {
         try {
             // Count number of items
-            int count = this.getNumberOfItems();
+            int count = getNumberOfItems();
             if (count < 1) {
                 throw new Exception("No item data");
             }
@@ -229,7 +280,7 @@ public class Item implements Config {
             Item[] itemList = new Item[count];
 
             // Read items and enter items into array of objects
-            FileReader itemFr = new FileReader(this.itemF);
+            FileReader itemFr = new FileReader(itemF);
             BufferedReader itemBr = new BufferedReader(itemFr);
             String row;
             int ind = 0;
@@ -283,7 +334,7 @@ public class Item implements Config {
                 sb.append(",").append(supplierId);
                 sb.append(",").append("active");
 
-                FileWriter itemFw = new FileWriter(this.itemF, true);
+                FileWriter itemFw = new FileWriter(itemF, true);
                 BufferedWriter itemBw = new BufferedWriter(itemFw);
                 itemBw.write(sb.append("\n").toString());
                 itemBw.close();
@@ -306,6 +357,7 @@ public class Item implements Config {
             boolean itemFound = false;
             
             if (this.itemId == null){
+                reader.close();
                 throw new NullValException();
             }
 
@@ -427,6 +479,10 @@ public class Item implements Config {
 
     /* Method to submit item sales and decrease quantity */
     public void submitItemSales(int sales) throws Exception {
+        
+        if (this.itemId == null){
+            throw new NullValException();
+        }
         if (sales < 1) {
             throw new Exception("Sales must be >= 1");
         }
@@ -439,6 +495,12 @@ public class Item implements Config {
 
         // Update the file
         updateItems();
+        
+        // Add item sales record
+        ItemSales itemsales = new ItemSales();
+        itemsales.setItemById(this.itemId);
+        itemsales.setItemSales(sales);
+        itemsales.addSalesRecord();
     }
 
     // Method to submit new stock and increase quantity

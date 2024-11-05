@@ -178,7 +178,7 @@ public class PR extends PRItems{
                 
                 // set user by id
                 String prUserId = prInfo[1];
-                pr.user = new User().getUserById(prUserId);
+                pr.user = User.getUserById(prUserId);
                 
                 prList[ind] = pr;
                 
