@@ -48,6 +48,12 @@ public class PO implements Config {
         this.user = user;
     }
     
+    public Item [] getPOItems(){
+        Item [] poItems = this.pr.getItems();
+        
+        return poItems;
+    }
+    
     private int getNumberOfPO(){
         try{
             FileReader poFr = new FileReader(this.PO_FILE);
@@ -85,6 +91,8 @@ public class PO implements Config {
                 
                 // set PR in PO
                 String prId = poInfo[1];
+                PR poPR = new PR().getPRByID(prId);
+                po.setPR(poPR);
                 
                 // set User in PO
                 String userId = poInfo[2];
@@ -154,6 +162,6 @@ public class PO implements Config {
         poFw.close();
         
         // Change PR status to approved
-        
+        this.pr.updatePRStatus("approved");
     }
 }

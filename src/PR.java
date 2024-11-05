@@ -12,6 +12,7 @@ public class PR extends PRItems{
     private String timestamp, dueDate, status;
     private final String prF = BASE_DIR + "pr.txt";
     
+    /* Constructors */
     PR(){
         
     }
@@ -20,6 +21,7 @@ public class PR extends PRItems{
         this.dueDate = dueDate;
     }
     
+    
     private PR(String prId, String timestamp, String dueDate, String status){
         super.setPRId(prId);
         this.timestamp = timestamp;
@@ -27,31 +29,38 @@ public class PR extends PRItems{
         this.status = status;
     }
     
+    /* Return info in an array */
     public String [] getCurrentPR(){
         String [] prInfo = {super.getPRId(), this.timestamp, this.dueDate, this.status};
         return prInfo;
     }
     
+    /*Set items record*/
     public void setItems(Item [] items){
         super.setPRItems(items);        
     }
     
+    /*return status*/
     public String getStatus(){
         return this.status;
     }
     
+    /*return PRitems*/
     public Item [] getItems(){
         return super.getPRItems();
     }
     
+    /*set user*/
     public void setUser(User user){
         this.user = user;
     }
     
+    /*return user*/
     public User getUser(){
         return this.user;
     }
     
+    /*create PR record*/
     public String createPR(){
         try{
             Item [] prItems = this.getItems();
@@ -66,7 +75,7 @@ public class PR extends PRItems{
             String timestamp = now.format(formatter);
             
             // Convert due date to date obj
-            LocalDateTime dueDateObj = LocalDateTime.parse(this.dueDate);
+            LocalDateTime dueDateObj = LocalDateTime.parse(this.dueDate, formatter);
             
             if (dueDateObj.isBefore(now)){
                 throw new Exception("Invalid due date");
@@ -110,6 +119,7 @@ public class PR extends PRItems{
         super.editReorderAmt(itemId, newReorderAmt);
     }
     
+    /* retrieve itemID to delete the entry of PRItem of itemID retrieved*/
     public void deletePRItem(Item item) throws Exception{
 
         String itemId = item.getItemId();
@@ -117,13 +127,17 @@ public class PR extends PRItems{
         super.deletePRItem(itemId);
     }
     
+    /*delete an entry of PR and update PRList*/
     public void deletePR() throws Exception{
+        /*retrieve current item record*/
         Item [] itemsPr = this.getPrItemsRecords();
         
+        /*delete current item record*/
         for (Item item : itemsPr){
             this.deletePRItem(item);
         }
         
+        /*create array of prlist without the deleted pr*/
         PR pr = new PR();
         PR [] prList = pr.getPRList();
         PR [] newPrList = new PR[prList.length-1];
@@ -137,9 +151,12 @@ public class PR extends PRItems{
             newPrList[ind] = prtmp;
             ind++;
         }
+        
+        /*update file with new pr list*/
         this.upPRFile(newPrList);
     }
     
+    /*write pr into file*/
     private void upPRFile(PR [] newPrList){
         try {
             FileWriter prFw = new FileWriter(this.prF);
@@ -159,6 +176,7 @@ public class PR extends PRItems{
         } 
     }
     
+    /*return PRList*/
     public PR [] getPRList(){
         int count = this.getNumberOfPr();
         PR [] prList = new PR[count];
@@ -192,7 +210,9 @@ public class PR extends PRItems{
             return null;
         }
     }
-    
+       
+    /*Generate new PR ID*/
+    @Override
     public String generateNewId(){
         // Get the last PR ID
         PR [] prList = this.getPRList();
@@ -207,8 +227,10 @@ public class PR extends PRItems{
         return prId;
     }
     
+    /*Return number of PR in file*/
     public int getNumberOfPr(){
         try{
+            
             FileReader prFr = new FileReader(this.prF);
             BufferedReader prBr = new BufferedReader(prFr);
             int count = 0;
@@ -223,6 +245,43 @@ public class PR extends PRItems{
         }catch (Exception e){
             System.out.println(e);
             return 0;
+        }   
+    }
+    
+    /*return PR based on ID requested*/
+    public PR getPRByID(String prId) {
+        try {
+            PR [] prList = this.getPRList();
+            for (PR pr : prList){
+                if (pr.getPRId().equals(prId)){
+                    return pr;
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e);
+            
         }
+        return null;
+    }
+    
+    /*update status of PR to approved or rejected*/
+    public void updatePRStatus(String newStatus) throws Exception{
+        /*check if status is approved or rejected*/
+        if (!newStatus.equals("approved") && !newStatus.equals("rejected")) {
+            System.out.println("Invalid status. Status should be either 'approved' or 'rejected'.");
+            throw new Exception("Invalid status. Status should be either 'approved' or 'rejected'.");
+        }
+        String targetPrId = super.getPRId();
+        PR [] prList = this.getPRList();
+        for (PR pr : prList){
+            if (pr.getPRId().equals(targetPrId)){
+                pr.status = newStatus;
+                break;
+            }
+        }
+        
+        // Update to txt file
+        this.upPRFile(prList);
     }
 }
