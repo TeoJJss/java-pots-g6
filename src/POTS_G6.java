@@ -93,6 +93,41 @@ public class POTS_G6 {
             System.err.println(e.getMessage());
         }
         
+        /* Add item with existing supplier */
+        Item item = new Item("test item", 25, 14);
+        Supplier supplier = new Supplier();
+        supplier.setCurrentSupplier("S2", "Living Sdn Bhd", "living@sdn.com", "active");
+        item.setSupplier(supplier);
+        
+        item.addItem();
+         
+ 
+        /* Edit item*/
+        try {
+            Item itemTest = itemList[2]; // pass the row ind of item in the table
+            itemTest.editItem("desk", 31, 30);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+         
+        
+        /* Delete item */
+        try {
+            Item itemTest = itemList[3]; // pass the row ind of item in the table
+            itemTest.deleteItem();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+         
+        
+        /* Submit item new stock */
+        try{
+            Item itemTest = itemList[7]; // pass the row ind of item in the table
+            itemTest.submitNewStock(10);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
         /* Create PR from item list */        
         PR pr1 = new PR("30/11/2024 12:00");
         
@@ -133,40 +168,7 @@ public class POTS_G6 {
             System.err.println(e.getMessage());
         }
  
-        /* Add item with existing supplier */
-        Item item = new Item("test item", 25, 14);
-        Supplier supplier = new Supplier();
-        supplier.setCurrentSupplier("S2", "Living Sdn Bhd", "living@sdn.com", "active");
-        item.setSupplier(supplier);
         
-        item.addItem();
-         
- 
-        /* Edit item*/
-        try {
-            Item itemTest = itemList[2]; // pass the row ind of item in the table
-            itemTest.editItem("desk", 31, 30);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-         
-        
-        /* Delete item */
-        try {
-            Item itemTest = itemList[3]; // pass the row ind of item in the table
-            itemTest.deleteItem();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-         
-        
-        /* Submit item new stock */
-        try{
-            Item itemTest = itemList[7]; // pass the row ind of item in the table
-            itemTest.submitNewStock(10);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
         
         
         /* List of suppliers (View) including items */
@@ -209,6 +211,31 @@ public class POTS_G6 {
             System.out.println(e);
         }
         
+        /* Get Payment History of Supplier*/
+        Supplier supp = suppliers[2];
+        PO [] paymentHistory = supp.getSupplierPaymentHistory();
+        
+        System.out.println(Arrays.toString(supp.getCurrentSupplier()));
+        String supplierid = supp.getSupplierId();
+        for (PO po : paymentHistory){
+            if (po == null){
+                continue;
+            }
+            System.out.println(po.getTimestamp());
+            System.out.print(po.getPoId() + " -> ");
+            Item [] poItems = po.getPOItems();
+            for (Item poItem : poItems){
+                if (poItem == null){
+                    break;
+                }
+                String poSupplierId = poItem.getSupplier().getSupplierId();
+                if (poSupplierId.equals(supplierid)){
+                    System.out.print(poItem.getItemId() + ", ");
+                }
+            }
+            System.out.println(po.getStatus() + "\n");
+        }
+        
         
         /* List of PO (View) */
         PO [] poList = new PO().getPOList();
@@ -236,29 +263,5 @@ public class POTS_G6 {
             System.err.println(e.getMessage());
         }  
         
-        /* Get Payment History of Supplier*/
-        Supplier supp = suppliers[2];
-        PO [] paymentHistory = supp.getSupplierPaymentHistory();
-        
-        System.out.println(Arrays.toString(supp.getCurrentSupplier()));
-        String supplierid = supp.getSupplierId();
-        for (PO po : paymentHistory){
-            if (po == null){
-                continue;
-            }
-            System.out.println(po.getTimestamp());
-            System.out.print(po.getPoId() + " -> ");
-            Item [] poItems = po.getPOItems();
-            for (Item poItem : poItems){
-                if (poItem == null){
-                    break;
-                }
-                String poSupplierId = poItem.getSupplier().getSupplierId();
-                if (poSupplierId.equals(supplierid)){
-                    System.out.print(poItem.getItemId() + ", ");
-                }
-            }
-            System.out.println(po.getStatus() + "\n");
-        }
     }
 }

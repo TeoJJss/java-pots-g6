@@ -117,7 +117,7 @@ public class Item implements Config {
                 return lowStockItems;
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return null;
         }
     }
@@ -156,7 +156,7 @@ public class Item implements Config {
             itemFr.close();
             return count;
         }catch (Exception e){
-            System.out.println(e);
+            System.err.println(e);
             return 0;
         }
     }
@@ -212,7 +212,7 @@ public class Item implements Config {
 
             return itemList;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return null;
         }
     }
@@ -263,7 +263,7 @@ public class Item implements Config {
 
             return itemList;
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return null;
         }
     }
@@ -401,7 +401,7 @@ public class Item implements Config {
             System.out.println("Item with ID " + this.itemId + " updated successfully.");
 
         } catch (Exception e) {
-            System.out.println("Error editing item: " + e.getMessage());
+            System.err.println("Error editing item: " + e.getMessage());
         }
     }
 
@@ -441,8 +441,8 @@ public class Item implements Config {
             writer.close();
             System.out.println("Item with ID " + itemId + " marked as deleted.");
 
-        } catch (IOException e) {
-            System.out.println("Error deleting item: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error deleting item: " + e.getMessage());
         }
 
     }
@@ -474,8 +474,8 @@ public class Item implements Config {
             writer.close();
             System.out.println("File updated successfully.");
 
-        } catch (IOException e) {
-            System.out.println("Error updating item file: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error updating item file: " + e.getMessage());
         }
     }
 

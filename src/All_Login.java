@@ -116,12 +116,30 @@ public class All_Login extends javax.swing.JFrame {
         
         User authenticatedUser = attemptUser.doLogin();
         if (authenticatedUser == null){
+            // auth fail
             System.out.println("Login failed! Please try again");
             JOptionPane.showMessageDialog(this, "Login Failed! Please try again.\n", "Error", JOptionPane.ERROR_MESSAGE);
         }else{
+            // auth success
             JOptionPane.showMessageDialog(this, "Hello " + authenticatedUser.getUserId() + " " + authenticatedUser.getUsername() + ", you are " + authenticatedUser.getRole());
             
+            String userRole = authenticatedUser.getRole();
+            
+            switch (userRole){
+                case "AM" -> System.out.println(userRole);
+                case "SM" -> System.out.println(userRole);
+                case "PM" -> System.out.println(userRole);
+                case "IM" -> System.out.println(userRole);
+                case "FM" -> System.out.println(userRole);
+                default -> System.err.println("Invalid user role");
+            }
+            
             // pass authenticatedUser to the next page
+//            testUI testui = new testUI(authenticatedUser);
+//            testui.setVisible(true);
+//            dispose();
+            
+            
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 

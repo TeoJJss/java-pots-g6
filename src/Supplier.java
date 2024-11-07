@@ -444,12 +444,14 @@ public class Supplier implements Config{
             PO [] poList = new PO().getPOList();
             PO [] supplierPO = new PO[poList.length];
             int ind = 0;
+            String currentSupplierId = this.id;
             
             // check if this supplier involve in the PO
             for (PO po: poList){
                 Item [] poItems = po.getPOItems();
                 for (Item item : poItems){
-                    if(item.getSupplier().getSupplierId().equals(this.id)){
+                    String itemSupplier = item.getSupplier().getSupplierId();
+                    if(itemSupplier.equals(currentSupplierId)){
                         supplierPO[ind] = po;
                         ind++;
                         break;
