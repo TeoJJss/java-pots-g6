@@ -54,6 +54,22 @@ public class PO implements Config {
         return poItems;
     }
     
+    public Item [] getPOItems(String supplierId){
+        Item [] poItems = this.pr.getItems();
+        Item [] supplierPoItems = new Item[poItems.length];
+        int ind = 0;
+        
+        for(Item poItem : poItems){
+            String itemSupplierId = poItem.getSupplier().getSupplierId();
+            if (itemSupplierId.equals(supplierId)){
+                supplierPoItems[ind] = poItem;
+                ind++;
+            }
+        }
+        
+        return supplierPoItems;
+    }
+    
     private int getNumberOfPO(){
         try{
             FileReader poFr = new FileReader(this.PO_FILE);
