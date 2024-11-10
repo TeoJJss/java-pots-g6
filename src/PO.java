@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 public class PO implements Config {
 
-    private final String PO_FILE = BASE_DIR + "po.txt";
+    private static final String PO_FILE = BASE_DIR + "po.txt";
     private String poId, timestamp, status;
     private PR pr;
     private User user; 
@@ -70,9 +70,9 @@ public class PO implements Config {
         return supplierPoItems;
     }
     
-    private int getNumberOfPO(){
+    private static int getNumberOfPO(){
         try{
-            FileReader poFr = new FileReader(this.PO_FILE);
+            FileReader poFr = new FileReader(PO_FILE);
             BufferedReader poBr = new BufferedReader(poFr);
             int count = 0;
             String row;
@@ -89,14 +89,14 @@ public class PO implements Config {
         }
     }
     
-    public PO [] getPOList(){
+    public static PO [] getPOList(){
         PO [] poList = null;
         
         try{
-            int count = this.getNumberOfPO();
+            int count = getNumberOfPO();
             poList = new PO[count];
             
-            FileReader poFr = new FileReader(this.PO_FILE);
+            FileReader poFr = new FileReader(PO_FILE);
             BufferedReader poBr = new BufferedReader(poFr);
             String row;
             int ind = 0;
@@ -133,7 +133,7 @@ public class PO implements Config {
     @Override
     public String generateNewId(){
         // Get the last PO ID
-        PO [] poList = this.getPOList();
+        PO [] poList = getPOList();
         int count = 0;
         if (poList.length != 0){
             String lastPOId = poList[poList.length-1].getPoId();
@@ -182,9 +182,9 @@ public class PO implements Config {
     }
 
     /*retrun PO based on ID requested*/
-    public PO getPOById(String id) {
+    public static PO getPOById(String id) {
         try {
-            PO [] poList = this.getPOList();
+            PO [] poList = getPOList();
             for (PO po : poList){
                 if (po.getPoId().equals(id)){
                     return po;
@@ -192,7 +192,7 @@ public class PO implements Config {
             }
             
         } catch (Exception e) {
-            System.out.println("An error occurred: " + e);
+            System.err.println("An error occurred: " + e);
             
         }
         return null;
@@ -201,9 +201,9 @@ public class PO implements Config {
     /*delete object from file*/
     public void deletePO() throws Exception{
         //get line count
-        int linecount = this.getNumberOfPO();
+        int linecount = getNumberOfPO();
         //create array to store new lines
-        String[] lines = new String[linecount];
+        String[] lines = new String[linecount-1];
         int index = 0;
         //update the new line array
         try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
@@ -225,58 +225,17 @@ public class PO implements Config {
 
     }
     
-    public void upPOFile() throws Exception{
-        String userId = this.user.getUserId();
-        String prId = this.pr.getPRId();
-        //set newline
-        String newline = this.getPoId() + "," + prId + "," + userId + "," + this.getTimestamp() + "," + this.getStatus();
+    public void updatePOStatus(String newStatus) throws Exception{
         //get line count
-        int linecount = this.getNumberOfPO();
-        //check for duplecate ids
-        try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts[0].equals(this.getPoId())) {
-                    linecount -= 1;
-                }
-            }
-        }
-        //create array to store new lines
-        String[] lines = new String[linecount + 2];
-        int index = 0;
-        //update the new linearray
-        try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (!parts[0].equals(this.getPoId())) {
-                    lines[index++] = line;
-                }
-            }
-        }
-        //write in newline to array
-        lines[index] = newline;
-        //Write back the new lines to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PO_FILE))) {
-            for (String outputLine : lines) {
-                if (outputLine != null) {  // Check to avoid writing nulls
-                    writer.write(outputLine + System.lineSeparator());
-                }
-            }
-        }
-    }
-    
-    public void updatePOStatus() throws Exception{
-        //get line count
-        int linecount = this.getNumberOfPO();
-        String newStatus = this.getStatus();
-        if(!(this.getStatus().equals("approved")||this.getStatus().equals("rejected") ||this.getStatus().equals("paid")|| this.getStatus().equals("pending"))){
-            System.out.println("Invalid status.");
+        int linecount = getNumberOfPO();
+        
+        if(!(newStatus.equals("approved")||newStatus.equals("rejected") || newStatus.equals("paid"))){
+            System.err.println("Invalid status.");
             throw new Exception("Invalid status.");
         }
+        
         //create array to store new lines
-        String[] lines = new String[linecount+1];
+        String[] lines = new String[linecount];
         int index = 0;
         //update the new line array
         try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {

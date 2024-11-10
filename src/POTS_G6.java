@@ -4,7 +4,7 @@ import java.util.List;
 
 public class POTS_G6 {
 
-    public static void main(String args[]){
+    public POTS_G6(){
         /* List of user */
         User [] userList = User.getUserList();
         for (User user : userList){
@@ -51,8 +51,8 @@ public class POTS_G6 {
         // Require user to select an item id first
         // Item item = new Item();
         try{
-            int itemTableInd = 12; // Get index from the clicked row in the table
-            items[24].submitItemSales(itemTableInd);
+            int sales = 20; 
+            items[24].submitItemSales(sales);
         }catch (Exception e){
             System.err.println(e.getMessage());
         }
@@ -68,7 +68,7 @@ public class POTS_G6 {
                 }
                 itemsales.setItemById(i.getItemId());
                 System.out.println(Arrays.toString(i.getItemInfo()));
-                int sales = itemsales.getSalesByItem("21/05/2024", "23/11/2024");
+                int sales = itemsales.getSalesByItem("21/05/2024", "09/11/2024");
                 System.out.println(sales);
                 System.out.println("\n");
             }
@@ -144,7 +144,8 @@ public class POTS_G6 {
         
         
         /* List of PR */
-        PR [] prList = new PR().getPRList();
+        PR [] prList = new PR().getPRList(); 
+        // getPendingPRList() to display pending PR only
         
         for (PR pr : prList){
             String [] prInfo = pr.getCurrentPR();
@@ -162,8 +163,10 @@ public class POTS_G6 {
         
         /* Approve or Reject PR */
         try{
-            PR pr = new PR().getPRList()[2];
-            pr.updatePRStatus("approved"); //approved or rejected
+            PR pr = new PR().getPendingPRList()[1];
+            pr.updatePRStatus("rejected"); //approved or rejected
+            // From UI, user can only reject PR
+            // to approve PR, user must create PO for the PR and the PR will be approved automatically
         }catch (Exception e){
             System.err.println(e.getMessage());
         }
@@ -181,7 +184,7 @@ public class POTS_G6 {
             for (Item itemSupp : itemsOfSupplier){
                 if (itemSupp != null){
                     String [] itemInfo = itemSupp.getItemInfo();
-                    System.out.println(itemInfo[0] + ", " + itemInfo[1]+ ", " +itemInfo[2]+ ", " +itemInfo[3] + ", " + itemInfo[4]);
+                    System.out.println("-> " + itemInfo[0] + ", " + itemInfo[1]+ ", " +itemInfo[2]+ ", " +itemInfo[3] + ", " + itemInfo[4]);
                 }
                 
             }
@@ -212,7 +215,7 @@ public class POTS_G6 {
         }
         
         /* Get Payment History of Supplier*/
-        Supplier supp = suppliers[2];
+        Supplier supp = suppliers[3];
         PO [] paymentHistory = supp.getSupplierPaymentHistory();
         
         System.out.println(Arrays.toString(supp.getCurrentSupplier()));
@@ -223,22 +226,19 @@ public class POTS_G6 {
             }
             System.out.println(po.getTimestamp());
             System.out.print(po.getPoId() + " -> ");
-            Item [] poItems = po.getPOItems();
+            Item [] poItems = po.getPOItems(supplierid);
             for (Item poItem : poItems){
                 if (poItem == null){
-                    break;
+                    continue;
                 }
-                String poSupplierId = poItem.getSupplier().getSupplierId();
-                if (poSupplierId.equals(supplierid)){
-                    System.out.print(poItem.getItemId() + ", ");
-                }
+                System.out.print(poItem.getItemId() + ", ");
             }
             System.out.println(po.getStatus() + "\n");
         }
         
         
         /* List of PO (View) */
-        PO [] poList = new PO().getPOList();
+        PO [] poList = PO.getPOList();
         for (PO po : poList){
             System.out.println(po.getPoId());
         }
@@ -247,21 +247,35 @@ public class POTS_G6 {
         // Require user to select a PR
         // Allow user to change the reorder amount after select PR
         try{
-            PR [] PRList = new PR().getPRList();
-            PR pr = PRList[0];
+            PR [] PRList = new PR().getPendingPRList();
+            PR pr = PRList[0]; // At UI, this user should be using the PR user choose
             
             Item [] prItems = pr.getItems(); // list of items in the PR
-            pr.editReorderAmt(prItems[1], 13); // optional to editreorderamount
+            pr.editReorderAmt(prItems[0], 13); // optional to editreorderamount
             
-            User pruser = User.getUserById("U2");
+            User poUser = User.getUserById("U2"); // At UI, this user should be using the login user
 
             PO po = new PO();
             po.setPR(pr);
-            po.setUser(pruser);
+            po.setUser(poUser);
             po.createPO();
         }catch (Exception e){
             System.err.println(e.getMessage());
         }  
         
+        /* Delete PO */
+        PO po = PO.getPOById("PO1");
+        try {
+            po.deletePO();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        
+        /* Update PO status - approved, rejected, paid */
+        try {
+            po.updatePOStatus("paid");
+        }catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

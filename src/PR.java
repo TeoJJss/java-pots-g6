@@ -210,6 +210,45 @@ public class PR extends PRItems{
             return null;
         }
     }
+    
+    /*return PRList*/
+    public PR [] getPendingPRList(){
+        int count = this.getNumberOfPr();
+        PR [] prList = new PR[count];
+        
+        try{
+            FileReader prFr = new FileReader(this.prF);
+            BufferedReader prBr = new BufferedReader(prFr);
+            String row;
+            int ind = 0;
+            while ((row=prBr.readLine()) != null){
+                String [] prInfo = row.split(",");
+                String prStatus = prInfo[4];
+                if (!prStatus.equals("pending")){
+                    continue;
+                }
+                String prId = prInfo[0];
+                PR pr = new PR(prId, prInfo[2], prInfo[3], prStatus);
+                super.setPRId(prId);
+                Item [] itemsPR = super.getPrItemsRecords();
+                pr.setItems(itemsPR);
+                
+                // set user by id
+                String prUserId = prInfo[1];
+                pr.user = User.getUserById(prUserId);
+                
+                prList[ind] = pr;
+                
+                ind ++;
+            }
+            prBr.close();
+            prFr.close();
+            return prList;
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
        
     /*Generate new PR ID*/
     @Override

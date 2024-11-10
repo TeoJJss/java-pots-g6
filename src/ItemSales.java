@@ -174,7 +174,7 @@ public class ItemSales extends Item {
             salesFr.close();
             return itemSales;
         }catch (Exception e){
-            System.out.println(e);
+            System.err.println(e);
             return 0;
         }
     }
