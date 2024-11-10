@@ -180,4 +180,127 @@ public class PO implements Config {
         // Change PR status to approved
         this.pr.updatePRStatus("approved");
     }
+
+    /*retrun PO based on ID requested*/
+    public PO getPOById(String id) {
+        try {
+            PO [] poList = this.getPOList();
+            for (PO po : poList){
+                if (po.getPoId().equals(id)){
+                    return po;
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e);
+            
+        }
+        return null;
+    }
+
+    /*delete object from file*/
+    public void deletePO() throws Exception{
+        //get line count
+        int linecount = this.getNumberOfPO();
+        //create array to store new lines
+        String[] lines = new String[linecount];
+        int index = 0;
+        //update the new line array
+        try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.contains(this.getPoId())) {
+                    lines[index++] = line;
+                }
+            }
+        }
+        //Write back the new lines to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PO_FILE))) {
+            for (String outputLine : lines) {
+                if (outputLine != null) {  // Check to avoid writing nulls
+                    writer.write(outputLine + System.lineSeparator());
+                }
+            }
+        }
+
+    }
+    
+    public void upPOFile() throws Exception{
+        String userId = this.user.getUserId();
+        String prId = this.pr.getPRId();
+        //set newline
+        String newline = this.getPoId() + "," + prId + "," + userId + "," + this.getTimestamp() + "," + this.getStatus();
+        //get line count
+        int linecount = this.getNumberOfPO();
+        //check for duplecate ids
+        try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts[0].equals(this.getPoId())) {
+                    linecount -= 1;
+                }
+            }
+        }
+        //create array to store new lines
+        String[] lines = new String[linecount + 2];
+        int index = 0;
+        //update the new linearray
+        try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (!parts[0].equals(this.getPoId())) {
+                    lines[index++] = line;
+                }
+            }
+        }
+        //write in newline to array
+        lines[index] = newline;
+        //Write back the new lines to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PO_FILE))) {
+            for (String outputLine : lines) {
+                if (outputLine != null) {  // Check to avoid writing nulls
+                    writer.write(outputLine + System.lineSeparator());
+                }
+            }
+        }
+    }
+    
+    public void updatePOStatus() throws Exception{
+        //get line count
+        int linecount = this.getNumberOfPO();
+        String newStatus = this.getStatus();
+        if(!(this.getStatus().equals("approved")||this.getStatus().equals("rejected") ||this.getStatus().equals("paid")|| this.getStatus().equals("pending"))){
+            System.out.println("Invalid status.");
+            throw new Exception("Invalid status.");
+        }
+        //create array to store new lines
+        String[] lines = new String[linecount+1];
+        int index = 0;
+        //update the new line array
+        try (BufferedReader reader = new BufferedReader(new FileReader(PO_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (!parts[0].equals(this.getPoId())) {
+                    lines[index++] = line;
+                }else{
+                    parts[4] = newStatus;
+                    String newline = parts[0] + "," + parts[1] + "," + parts[2] + "," + parts[3] + "," + parts[4];
+                    lines[index++] = newline;
+                }
+            }
+        }
+        //Write back the new lines to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PO_FILE))) {
+            for (String outputLine : lines) {
+                if (outputLine != null) {  // Check to avoid writing nulls
+                    writer.write(outputLine + System.lineSeparator());
+                }
+            }
+        }
+        
+    }
+    
 }
