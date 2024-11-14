@@ -126,12 +126,18 @@ public class All_Login extends javax.swing.JFrame {
             String userRole = authenticatedUser.getRole();
             
             switch (userRole){
-                case "AM" -> System.out.println(userRole);
-                case "SM" -> System.out.println(userRole);
-                case "PM" -> System.out.println(userRole);
-                case "IM" -> System.out.println(userRole);
-                case "FM" -> System.out.println(userRole);
-                default -> System.err.println("Invalid user role");
+                case "AM" -> 
+                    System.out.println(userRole);
+                case "SM" -> 
+                    System.out.println(userRole);
+                case "PM" -> 
+                    System.out.println(userRole);
+                case "IM" -> 
+                    System.out.println(userRole);
+                case "FM" -> 
+                    System.out.println(userRole);
+                default -> 
+                    System.err.println("Invalid user role");
             }
             
             // pass authenticatedUser to the next page
