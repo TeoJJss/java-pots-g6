@@ -13,47 +13,56 @@ public class PO implements Config {
     private String poId, timestamp, status;
     private PR pr;
     private User user; 
-
+    
+    /* Constructors*/
     PO(){
         
     }
-
+    
     private PO(String poId, String timestamp, String status) {
         this.poId = poId;
         this.timestamp = timestamp;
         this.status = status;
     }
-
+    
+    /* Set status of PO */
     public void setStatus(String status) {
         this.status = status;
     }
-
+    
+    /* Get PO Id */
     public String getPoId() {
         return this.poId;
     }
-
+    
+    /* Get PO created datetime */
     public String getTimestamp() {
         return this.timestamp;
     }
-
+    
+    /* Get PO status*/
     public String getStatus() {
         return this.status;
     }
     
+    /* set PR to the current PO */
     public void setPR(PR pr){
         this.pr = pr;
     }
     
+    /* Set creator of current PO */
     public void setUser(User user){
         this.user = user;
     }
     
+    /* Get list of items in the PO */
     public Item [] getPOItems(){
         Item [] poItems = this.pr.getItems();
         
         return poItems;
     }
     
+    /* Get list of items in the PO (for specific supplier) */
     public Item [] getPOItems(String supplierId){
         Item [] poItems = this.pr.getItems();
         Item [] supplierPoItems = new Item[poItems.length];
@@ -70,6 +79,7 @@ public class PO implements Config {
         return supplierPoItems;
     }
     
+    /* Get number of records in txt file */
     private static int getNumberOfPO(){
         try{
             FileReader poFr = new FileReader(PO_FILE);
@@ -89,6 +99,7 @@ public class PO implements Config {
         }
     }
     
+    /* get list of PO */
     public static PO [] getPOList(){
         PO [] poList = null;
         
@@ -130,6 +141,7 @@ public class PO implements Config {
         return poList;
     }
     
+    /* Generate new PO Id */
     @Override
     public String generateNewId(){
         // Get the last PO ID
@@ -145,6 +157,7 @@ public class PO implements Config {
         return poId;
     }
     
+    /* Generate new PO for PR*/
     public void createPO() throws Exception{
         if (this.pr == null || this.pr.getPRId() == null || this.user == null || this.user.getUserId() == null){
             throw new NullValException();
@@ -225,6 +238,7 @@ public class PO implements Config {
 
     }
     
+    /* Change status of PO */
     public void updatePOStatus(String newStatus) throws Exception{
         //get line count
         int linecount = getNumberOfPO();

@@ -65,13 +65,7 @@ public class Supplier implements Config{
         return this.items;
     }
     
-    /* Check supplier if exist */
-    private Boolean validateSupplierId(String id){
-        String [] supplier = getSupplierInfoById(id);
-        return supplier != null;
-    }
-    
-    /* Vakidate current supplier obj */
+    /* Validate current supplier obj */
     public Boolean validateSupplier(){
         try{
             FileReader supplierFr = new FileReader(supplierF);
@@ -441,7 +435,7 @@ public class Supplier implements Config{
     /* Get payment history of current supplier */
     public PO [] getSupplierPaymentHistory(){
         try {
-            PO [] poList = new PO().getPOList();
+            PO [] poList = PO.getPOList();
             PO [] supplierPO = new PO[poList.length];
             int ind = 0;
             String currentSupplierId = this.id;

@@ -41,7 +41,7 @@ public class ItemSales extends Item {
     /* return item object based on item id */
     public Item getItem(){
         String itemId = super.getItemId();
-        Item item = super.getItemById(itemId);
+        Item item = getItemById(itemId);
         
         return item;
     }
@@ -179,6 +179,7 @@ public class ItemSales extends Item {
         }
     }
     
+    /* Get number of sales records in txt file*/
     private static int getNumberOfSalesRecords(){
         try{
             FileReader salesFr = new FileReader(itemSalesF);

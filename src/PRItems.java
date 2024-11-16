@@ -8,18 +8,22 @@ abstract class PRItems implements Config{
     private Item [] items;
     private final String prItemF = BASE_DIR + "pr_items.txt";
     
+    /* Set list of items */
     public void setPRItems(Item [] items){
         this.items = items;
     }
     
+    /* set PR ID */
     public void setPRId(String prId){
         this.prId = prId;
     }
     
+    /* Get PR ID */
     public String getPRId(){
         return this.prId;
     }
     
+    /* get list of items in the PR */
     public Item [] getPRItems(){
         return this.items;
     }
@@ -85,6 +89,7 @@ abstract class PRItems implements Config{
         }
     }
     
+    /* Create records of PR-Items */
     public void createPrItems() throws Exception{
         StringBuffer sb = new StringBuffer();
         for (Item item : this.items){
@@ -112,6 +117,7 @@ abstract class PRItems implements Config{
         prFw.close();
     }
     
+    /* Edit reorder amount of specific item in current PR */
     public void editReorderAmt(String itemId, int newReorderAmt) throws Exception{
         StringBuffer sb = new StringBuffer();
         FileReader prItemFr = new FileReader(this.prItemF);
@@ -136,6 +142,7 @@ abstract class PRItems implements Config{
         prFw.close();
     }
     
+    /* Delete an existing item in current PR */
     public void deletePRItem(String itemId) throws Exception{
         StringBuffer sb = new StringBuffer();
         FileReader prItemFr = new FileReader(this.prItemF);
