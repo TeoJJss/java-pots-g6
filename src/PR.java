@@ -45,6 +45,11 @@ public class PR extends PRItems{
         return this.status;
     }
     
+    /* Get due date */
+    public String getDueDate(){
+        return this.dueDate;
+    }
+    
     /*return PRitems*/
     public Item [] getItems(){
         return super.getPRItems();

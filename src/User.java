@@ -204,4 +204,9 @@ public class User implements Config {
             throw new Exception("Fail to delete user");
         }
     }
+    
+    @Override
+    public String toString(){
+        return userId + ", " + username + ", " + role;
+    }
 }

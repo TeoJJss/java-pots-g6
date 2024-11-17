@@ -43,6 +43,10 @@ public class Supplier implements Config{
         this.email = email;
         this.status = status;
     }
+
+    public String getName() {
+        return name;
+    }
     
     /* Add items into a supplier obj */
     public void setItems(Item [] items){
@@ -433,7 +437,11 @@ public class Supplier implements Config{
     }
     
     /* Get payment history of current supplier */
-    public PO [] getSupplierPaymentHistory(){
+    public String getEmail(){
+        return email;
+    }
+
+    public PO[] getSupplierPaymentHistory() {
         try {
             PO [] poList = PO.getPOList();
             PO [] supplierPO = new PO[poList.length];
@@ -458,5 +466,10 @@ public class Supplier implements Config{
             System.out.println(e);
             return null;
         }
+    }
+    
+    @Override
+    public String toString(){
+        return id + " , " + name + " , " + email;
     }
 }
