@@ -50,9 +50,19 @@ public class PO implements Config {
         this.pr = pr;
     }
     
+    /* get PR of the current PO */
+    public PR getPR(){
+        return pr;
+    }
+    
     /* Set creator of current PO */
     public void setUser(User user){
         this.user = user;
+    }
+    
+    /* Get creator of current PO */
+    public User getUser(){
+        return user;
     }
     
     /* Get list of items in the PO */
@@ -113,6 +123,51 @@ public class PO implements Config {
             int ind = 0;
             while ((row=poBr.readLine()) != null){
                 String [] poInfo = row.split(",");
+                String poId = poInfo[0];
+                PO po = new PO(poId, poInfo[3], poInfo[4]);
+                
+                // set PR in PO
+                String prId = poInfo[1];
+                PR poPR = new PR().getPRByID(prId);
+                po.setPR(poPR);
+                
+                // set User in PO
+                String userId = poInfo[2];
+                User creator = User.getUserById(userId);
+                if (creator == null){
+                    throw new Exception("Invalid user for " + poId);
+                }
+                po.setUser(creator);
+                
+                poList[ind] = po;
+                
+                ind ++;
+            }
+            poBr.close();
+            poFr.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return poList;
+    }
+    
+    /* get list of pending PO */
+    public static PO [] getPOList(String status){
+        PO [] poList = null;
+        
+        try{
+            int count = getNumberOfPO();
+            poList = new PO[count];
+            
+            FileReader poFr = new FileReader(PO_FILE);
+            BufferedReader poBr = new BufferedReader(poFr);
+            String row;
+            int ind = 0;
+            while ((row=poBr.readLine()) != null){
+                String [] poInfo = row.split(",");
+                if (!poInfo[4].equals(status)){
+                    continue;
+                }
                 String poId = poInfo[0];
                 PO po = new PO(poId, poInfo[3], poInfo[4]);
                 
@@ -259,6 +314,9 @@ public class PO implements Config {
                 if (!parts[0].equals(this.getPoId())) {
                     lines[index++] = line;
                 }else{
+                    if (parts[4].equals("paid")){ // do not allow status update if the PO is paid
+                        throw new Exception("You are not allowed to update PO with 'paid' status");
+                    }
                     parts[4] = newStatus;
                     String newline = parts[0] + "," + parts[1] + "," + parts[2] + "," + parts[3] + "," + parts[4];
                     lines[index++] = newline;
