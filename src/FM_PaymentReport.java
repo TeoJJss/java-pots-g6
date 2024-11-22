@@ -32,6 +32,7 @@ public class FM_PaymentReport extends javax.swing.JFrame {
         
         String fmInfo = authenticatedUser.getUsername() + " (" + authenticatedUser.getUserId() + ")";
         initComponents();
+        setTitle("Payment report - " + po.getPoId());
         
         poIdLabel.setText(po.getPoId());
         paymentDate.setText(currentDate.toString());

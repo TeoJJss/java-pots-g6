@@ -120,10 +120,20 @@ public class FM_PoItems extends javax.swing.JFrame {
         for (Item item : poItems){
             String [] itemInfo = new String [5];
             Supplier itemSupplier = item.getSupplier();
-            System.out.println(item.getItemId());
+            
+            // Item info
+            int itemQuantity = item.getQuantity(); 
+            int reorderLevel = item.getReorderLevel();
+            String stockStatus = "";
+            if (itemQuantity < reorderLevel){
+                // Insufficient
+                stockStatus = "Insufficient";
+            }else{
+                stockStatus = "Sufficient";
+            }
             itemInfo[0] = item.getItemId();
             itemInfo[1] = item.getItemName();
-            itemInfo[2] = item.getQuantity() + " / " + item.getReorderLevel();
+            itemInfo[2] = itemQuantity + " / " + reorderLevel + " (" + stockStatus + ")";
             itemInfo[3] = item.getReorderAmt() + "";
             itemInfo[4] = itemSupplier.toString();
             tableModel.addRow(itemInfo);
