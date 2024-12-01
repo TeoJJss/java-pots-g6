@@ -14,6 +14,7 @@ public class FM_SupplierPaymentHistory extends javax.swing.JFrame {
      */
     public FM_SupplierPaymentHistory(User authenticatedUser, Supplier supplier) {
         initComponents();
+        setTitle("Supplier Payment History - " + supplier.getSupplierId());
         supplierIDLabel.setText(supplier.getSupplierId());
         supplierNameLabel.setText(supplier.getName());
         supplierEmailLabel.setText(supplier.getEmail());
@@ -37,13 +38,15 @@ public class FM_SupplierPaymentHistory extends javax.swing.JFrame {
                 //Loop items in PO
                 Item [] poItems = payment.getPOItems();
                 for (Item poItem : poItems){
-                    if (poItem != null && poItem.getSupplier().getSupplierId().equals(supplierId)){
-                        String itemId = poItem.getItemId();
-                        String itemName = poItem.getItemName();
-                        String reorderAmt = poItem.getReorderAmt() + "";
+                    if (poItem != null){
+                        if (poItem.getSupplier().getSupplierId().equals(supplierId)){
+                            String itemId = poItem.getItemId();
+                            String itemName = poItem.getItemName();
+                            String reorderAmt = poItem.getReorderAmt() + "";
 
-                        String [] tableRow = {itemId, itemName, poId, reorderAmt, createdDate, status};
-                        tableModel.addRow(tableRow);
+                            String [] tableRow = {itemId, itemName, poId, reorderAmt, createdDate, status};
+                            tableModel.addRow(tableRow);
+                        }
                     }
                 }
             }

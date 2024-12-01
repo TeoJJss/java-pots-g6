@@ -24,6 +24,7 @@ public class FM_SupplierList extends javax.swing.JFrame {
         initComponents();
         
         this.authenticatedUser = authenticatedUser;
+        setTitle("List of Suppliers - FM");
         setTable();
     }
     

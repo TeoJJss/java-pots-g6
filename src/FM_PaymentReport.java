@@ -25,11 +25,14 @@ public class FM_PaymentReport extends javax.swing.JFrame {
     public FM_PaymentReport(User authenticatedUser, PO po) {
         this.authenticatedUser = authenticatedUser;
         this.po = po;
+        
+        // Get current timestamp
         LocalDate currentDate = LocalDate.now();
         LocalTime currentTime = LocalTime.now();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = currentTime.format(timeFormatter);
         
+        // Finance manager info
         String fmInfo = authenticatedUser.getUsername() + " (" + authenticatedUser.getUserId() + ")";
         initComponents();
         setTitle("Payment report - " + po.getPoId());
