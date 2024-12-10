@@ -51,6 +51,8 @@ public class AM_ManageUser extends javax.swing.JFrame {
         passwordField.setText("");
         roleField.setEnabled(true);
         statusField.setSelectedItem("active");
+        
+        addBtn.setEnabled(true);
     }
     /**
      * This method is called from within the constructor to initialize the form.

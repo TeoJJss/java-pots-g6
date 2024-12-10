@@ -223,6 +223,7 @@ public class PM_PrList extends javax.swing.JFrame {
             newPO.setPR(targetPR);
             newPO.setUser(authenticatedUser);
             newPO.createPO();
+            JOptionPane.showMessageDialog(this, "Generate PO successfully");
             setTable();
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

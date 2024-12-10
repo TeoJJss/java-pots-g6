@@ -86,6 +86,7 @@ public class FM_PaymentReport extends javax.swing.JFrame {
             }
         ));
         itemsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        itemsTable.setEnabled(false);
         itemsTable.setRowSelectionAllowed(false);
         jScrollPane1.setViewportView(itemsTable);
 
