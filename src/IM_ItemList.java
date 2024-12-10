@@ -40,6 +40,7 @@ public class IM_ItemList extends javax.swing.JFrame {
         }
         
         itemTable.setModel(tableModel);
+        itemTable.clearSelection();
     }
     /**
      * This method is called from within the constructor to initialize the form.

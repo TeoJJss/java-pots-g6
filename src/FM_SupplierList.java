@@ -73,6 +73,11 @@ public class FM_SupplierList extends javax.swing.JFrame {
 
             }
         ));
+        suppliersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                suppliersTableMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(suppliersTable);
 
         paymentHistoryBtn.setText("View Payment History");
@@ -148,6 +153,10 @@ public class FM_SupplierList extends javax.swing.JFrame {
         fmDashboard.setVisible(true);
         dispose();
     }//GEN-LAST:event_backBtnActionPerformed
+
+    private void suppliersTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_suppliersTableMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_suppliersTableMouseReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
