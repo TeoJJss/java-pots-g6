@@ -119,7 +119,8 @@ public class All_Login extends javax.swing.JFrame {
             
             switch (userRole){
                 case "AM" -> {
-                    System.out.println(userRole);
+                    AM_Dashboard am_dash = new AM_Dashboard(authenticatedUser);
+                    am_dash.setVisible(true);
                 }
                 case "SM" -> {
                     System.out.println(userRole);
@@ -128,7 +129,8 @@ public class All_Login extends javax.swing.JFrame {
                     System.out.println(userRole);
                 }
                 case "IM" -> {
-                    System.out.println(userRole);
+                    IM_Dashboard im_dash = new IM_Dashboard(authenticatedUser);
+                    im_dash.setVisible(true);
                 }
                 case "FM" -> {
                     FM_Dashboard fm_dash = new FM_Dashboard(authenticatedUser);
