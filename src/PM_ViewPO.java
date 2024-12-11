@@ -11,19 +11,17 @@ import javax.swing.table.DefaultTableModel;
  * @author User
  */
 public class PM_ViewPO extends javax.swing.JFrame {
+    private User authenticatedUser;
     private DefaultTableModel tableModel = new DefaultTableModel();
+
     /**
      * Creates new form PM_ViewPO
+     * @param authenticatedUser
      */
-//    public PM_ViewPO() {
-//        initComponents();
-//        setTitle("View PO List - SM");
-//        setTable();
-//    }
-    
     public PM_ViewPO(User authenticatedUser) {
         initComponents();
-        setTitle("View PO List - SM");
+        this.authenticatedUser = authenticatedUser;
+        setTitle("View PO List - PM");
         setTable();
     }
     
@@ -35,7 +33,6 @@ public class PM_ViewPO extends javax.swing.JFrame {
         
         for (PO po : poList){
             if (po != null){
-                System.out.println(po.getPoId());
                 PR poPr = po.getPR();
                 User poCreator = po.getUser();
                 String[] poInfo = new String[6];
@@ -49,11 +46,10 @@ public class PM_ViewPO extends javax.swing.JFrame {
 
                 // Add row to the table
                 tableModel.addRow(poInfo);
-            }
-            
-            
+            }  
+            POTable.setModel(tableModel);
         }
-        POTable.setModel(tableModel);
+
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -102,29 +98,26 @@ public class PM_ViewPO extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(319, 319, 319)
+                        .addGap(248, 248, 248)
                         .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(71, 71, 71)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(72, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel2)
                 .addGap(26, 26, 26)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(backBtn)
-                .addGap(20, 20, 20))
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -132,6 +125,9 @@ public class PM_ViewPO extends javax.swing.JFrame {
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // TODO add your handling code here:
+        PM_Dashboard pmDashboard = new PM_Dashboard(this.authenticatedUser);
+        pmDashboard.setVisible(true);
+        dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
     /**
