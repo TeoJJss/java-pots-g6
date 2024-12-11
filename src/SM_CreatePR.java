@@ -28,6 +28,12 @@ public class SM_CreatePR extends javax.swing.JFrame {
         this.authenticatedUser = authenticatedUser;
         setTable();
     }
+//    public SM_CreatePR() {
+//        setTitle("Create PR - SM");
+//        initComponents();
+//        this.authenticatedUser = User.getUserById("U4");
+//        setTable();
+//    }
     
     private void setTable(){
         tableModel = new DefaultTableModel();
@@ -180,9 +186,15 @@ public class SM_CreatePR extends javax.swing.JFrame {
             int count = 0;
             for(int row : rows){
                 String itemId = itemTable.getValueAt(row, 0).toString();
-                int reorderAmt = Integer.parseInt(itemTable.getValueAt(row, 4).toString());
+                String reorderAmtStr = (String) itemTable.getValueAt(row, 4);
                 targetItems[count] = Item.getItemById(itemId);
-                targetItems[count].setReorderAmt(reorderAmt);
+                
+                if (reorderAmtStr != null && !reorderAmtStr.isEmpty()){
+                    // If reorder amount is set, use the reorder amount. Otherwise use default (reorder level - stock)
+                    int reorderAmt = Integer.parseInt(reorderAmtStr);
+                    targetItems[count].setReorderAmt(reorderAmt);
+                }
+                
                 count++;
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -196,14 +208,21 @@ public class SM_CreatePR extends javax.swing.JFrame {
                 throw new Exception("Fail to create PR");
             }
             JOptionPane.showMessageDialog(this, "A new PR is created");
+            rows = null;
             itemTable.clearSelection();
         }catch(NullPointerException ne){
-            JOptionPane.showMessageDialog(this, "Please enter reorder amount and select a due date", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(ne);
+            JOptionPane.showMessageDialog(this, "Please select at least 1 item and set a due date", "Error", JOptionPane.ERROR_MESSAGE);
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println(e);
         }
     }//GEN-LAST:event_createPRBtnActionPerformed
+    
+//    public static void main(String[] args) {
+//        SM_CreatePR pg = new SM_CreatePR();
+//        pg.setVisible(true);
+//    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
