@@ -102,9 +102,9 @@ abstract class PRItems implements Config{
             // if no reorder amount is set, attempt to use reorderLevel - stock
             if (reorderAmt == 0){
                 reorderAmt = Integer.parseInt(itemInfo[3]) - Integer.parseInt(itemInfo[2]);
-                if (reorderAmt < 1){
-                    throw new Exception("Invalid reorder amount");
-                }
+            }
+            if (reorderAmt < 1){
+                throw new Exception("Invalid reorder amount");
             }
             sb.append(this.prId).append(",").append(itemId).append(",").append(reorderAmt).append("\n");
         }
