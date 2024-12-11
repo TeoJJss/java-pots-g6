@@ -1,21 +1,13 @@
 
 import javax.swing.JOptionPane;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-
-/**
- *
- * @author User
- */
 public class All_Login extends javax.swing.JFrame {
 
     /**
      * Creates new form All_Login
      */
     public All_Login() {
+        setTitle("Login page");
         initComponents();
     }
 
@@ -126,21 +118,33 @@ public class All_Login extends javax.swing.JFrame {
             String userRole = authenticatedUser.getRole();
             
             switch (userRole){
-                case "AM" -> 
+                case "AM" -> {
+                    AM_Dashboard am_dash = new AM_Dashboard(authenticatedUser);
+                    am_dash.setVisible(true);
+                }
+                case "SM" -> {
+                    SM_Dashboard sm_dash =  new SM_Dashboard(authenticatedUser);
+                    sm_dash.setVisible(true);
+                }
+                case "PM" -> {
                     System.out.println(userRole);
-                case "SM" -> 
-                    System.out.println(userRole);
-                case "PM" -> 
-                    System.out.println(userRole);
-                case "IM" -> 
-                    System.out.println(userRole);
-                case "FM" -> 
-                    System.out.println(userRole);
-                default -> 
+                }
+                case "IM" -> {
+                    IM_Dashboard im_dash = new IM_Dashboard(authenticatedUser);
+                    im_dash.setVisible(true);
+                }
+                case "FM" -> {
+                    FM_Dashboard fm_dash = new FM_Dashboard(authenticatedUser);
+                    fm_dash.setVisible(true);
+                    
+                }
+                default -> {
                     System.err.println("Invalid user role");
+                }
             }
+            dispose();
             
-            // pass authenticatedUser to the next page
+            // pass authenticatedUser to the next page            
 //            testUI testui = new testUI(authenticatedUser);
 //            testui.setVisible(true);
 //            dispose();
