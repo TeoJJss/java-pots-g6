@@ -18,6 +18,12 @@ public class PM_Dashboard extends javax.swing.JFrame {
         this.authenticatedUser = authenticatedUser;
         initComponents();
         welcomeMsgLabel.setText("Hello " + authenticatedUser.getUsername() + ", " + authenticatedUser.getRole());
+        
+        if (authenticatedUser.getRole().equals("AM")){
+            adminBtn.setVisible(true);
+        }else{
+            adminBtn.setVisible(false);
+        }
     }
 
     /**
@@ -35,6 +41,7 @@ public class PM_Dashboard extends javax.swing.JFrame {
         PRButton = new javax.swing.JButton();
         managePOButton = new javax.swing.JButton();
         logoutButton = new javax.swing.JButton();
+        adminBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,6 +82,13 @@ public class PM_Dashboard extends javax.swing.JFrame {
             }
         });
 
+        adminBtn.setText("Admin");
+        adminBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,13 +103,14 @@ public class PM_Dashboard extends javax.swing.JFrame {
                 .addContainerGap(127, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(welcomeMsgLabel)
-                        .addGap(53, 53, 53))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(logoutButton)
-                        .addGap(29, 29, 29))))
+                .addComponent(welcomeMsgLabel)
+                .addGap(53, 53, 53))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addComponent(adminBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoutButton)
+                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,7 +126,9 @@ public class PM_Dashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(managePOButton)
                 .addGap(18, 18, 18)
-                .addComponent(logoutButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logoutButton)
+                    .addComponent(adminBtn))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -153,6 +170,13 @@ public class PM_Dashboard extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_ManageItemsButtonActionPerformed
 
+    private void adminBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBtnActionPerformed
+        // TODO add your handling code here:
+        AM_Dashboard am_dash = new AM_Dashboard(authenticatedUser);
+        am_dash.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_adminBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -161,6 +185,7 @@ public class PM_Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton ManageItemsButton;
     private javax.swing.JButton PRButton;
     private javax.swing.JButton SupplierButton;
+    private javax.swing.JButton adminBtn;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton managePOButton;
     private javax.swing.JLabel welcomeMsgLabel;

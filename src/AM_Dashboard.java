@@ -50,6 +50,11 @@ public class AM_Dashboard extends javax.swing.JFrame {
         });
 
         enterRoleBtn.setText("Enter Role View");
+        enterRoleBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterRoleBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,6 +103,13 @@ public class AM_Dashboard extends javax.swing.JFrame {
         amManageUser.setVisible(true);
         dispose();
     }//GEN-LAST:event_manageUserBtnActionPerformed
+
+    private void enterRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterRoleBtnActionPerformed
+        // TODO add your handling code here:
+        AM_EnterView am_enterview = new AM_EnterView(authenticatedUser);
+        am_enterview.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_enterRoleBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton enterRoleBtn;

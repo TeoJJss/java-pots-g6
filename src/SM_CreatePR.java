@@ -116,6 +116,11 @@ public class SM_CreatePR extends javax.swing.JFrame {
         });
 
         backBtn.setText("Back");
+        backBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backBtnActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Due Date");
 
@@ -218,6 +223,13 @@ public class SM_CreatePR extends javax.swing.JFrame {
             System.err.println(e);
         }
     }//GEN-LAST:event_createPRBtnActionPerformed
+
+    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
+        // TODO add your handling code here:
+        SM_Dashboard sm_dash = new SM_Dashboard(authenticatedUser);
+        sm_dash.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_backBtnActionPerformed
     
 //    public static void main(String[] args) {
 //        SM_CreatePR pg = new SM_CreatePR();

@@ -123,10 +123,12 @@ public class All_Login extends javax.swing.JFrame {
                     am_dash.setVisible(true);
                 }
                 case "SM" -> {
-                    System.out.println(userRole);
+                    SM_Dashboard sm_dash =  new SM_Dashboard(authenticatedUser);
+                    sm_dash.setVisible(true);
                 }
                 case "PM" -> {
-                    System.out.println(userRole);
+                    PM_Dashboard pm_dash =  new PM_Dashboard(authenticatedUser);
+                    pm_dash.setVisible(true);
                 }
                 case "IM" -> {
                     IM_Dashboard im_dash = new IM_Dashboard(authenticatedUser);

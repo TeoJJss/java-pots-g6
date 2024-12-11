@@ -14,8 +14,15 @@ public class IM_Dashboard extends javax.swing.JFrame {
      * @param authenticatedUser
      */
     public IM_Dashboard(User authenticatedUser) {
+        setTitle("IM Dashboard - " + authenticatedUser.getUsername());
         this.authenticatedUser = authenticatedUser;
         initComponents();
+        
+        if (authenticatedUser.getRole().equals("AM")){
+            adminBtn.setVisible(true);
+        }else{
+            adminBtn.setVisible(false);
+        }
     }
 
     /**
@@ -30,6 +37,7 @@ public class IM_Dashboard extends javax.swing.JFrame {
         manageItemsBtn = new javax.swing.JButton();
         ManageSuppliersBtn = new javax.swing.JButton();
         logoutBtn = new javax.swing.JButton();
+        adminBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,22 +62,29 @@ public class IM_Dashboard extends javax.swing.JFrame {
             }
         });
 
+        adminBtn.setText("Admin");
+        adminBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(manageItemsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                        .addComponent(ManageSuppliersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48))))
+                .addComponent(manageItemsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addComponent(ManageSuppliersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addComponent(adminBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,7 +94,9 @@ public class IM_Dashboard extends javax.swing.JFrame {
                     .addComponent(manageItemsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ManageSuppliersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(logoutBtn)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logoutBtn)
+                    .addComponent(adminBtn))
                 .addContainerGap())
         );
 
@@ -107,8 +124,16 @@ public class IM_Dashboard extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_ManageSuppliersBtnActionPerformed
 
+    private void adminBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBtnActionPerformed
+        // TODO add your handling code here:
+        AM_Dashboard am_dash = new AM_Dashboard(authenticatedUser);
+        am_dash.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_adminBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ManageSuppliersBtn;
+    private javax.swing.JButton adminBtn;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JButton manageItemsBtn;
     // End of variables declaration//GEN-END:variables

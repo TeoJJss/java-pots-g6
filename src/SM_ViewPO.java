@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
  * @author User
  */
 public class SM_ViewPO extends javax.swing.JFrame {
-
+    private User authenticatedUser;
     private DefaultTableModel tableModel = new DefaultTableModel();
     
 //    public SM_ViewPO() {
@@ -21,6 +21,7 @@ public class SM_ViewPO extends javax.swing.JFrame {
 //    }
     
     public SM_ViewPO(User authenticatedUser) {
+        this.authenticatedUser = authenticatedUser;
         initComponents();
         setTitle("View PO List - SM");
         setTable();
@@ -169,6 +170,9 @@ public class SM_ViewPO extends javax.swing.JFrame {
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // TODO add your handling code here:
+        SM_Dashboard sm_dash = new SM_Dashboard(authenticatedUser);
+        sm_dash.setVisible(true);
+        dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
