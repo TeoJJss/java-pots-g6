@@ -2,6 +2,10 @@
 import javax.swing.table.DefaultTableModel;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.TimePicker;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -12,11 +16,17 @@ import com.github.lgooddatepicker.components.TimePicker;
  * @author yifen
  */
 public class PM_ItemList extends javax.swing.JFrame {
+
     private User authenticatedUser;
     private DefaultTableModel tableModel;
     private DefaultTableModel SelectedTable;
+    private int TotalSelected = 0;
+    private String[] selectedList = new String[500];
+    private Item[] selectedList_true = new Item[500];
+
     /**
      * Creates new form PM_ItemList
+     *
      * @param authenticatedUser
      */
     public PM_ItemList(User authenticatedUser) {
@@ -26,16 +36,23 @@ public class PM_ItemList extends javax.swing.JFrame {
         setTable();
     }
     
-    private void setTable(){
+//    public PM_ItemList() {
+//        initComponents();
+//        this.authenticatedUser = User.getUserById("U1");
+//        setTitle("View Supplier List - PM");
+//        setTable();
+//    }
+    
+    private void setTable() {
         tableModel = new DefaultTableModel();
-        Item [] itemList = Item.getActiveItemList();
+        Item[] itemList = Item.getActiveItemList();
         
         String[] columnNames = {"Item ID", "Item Name", "Current Stock", "Reorder Level"};
         tableModel.setColumnIdentifiers(columnNames);
         
-        for (Item item : itemList){
-            if(item != null){
-                String [] itemInfo = item.getItemInfo();
+        for (Item item : itemList) {
+            if (item != null) {
+                String[] itemInfo = item.getItemInfo();
                 tableModel.addRow(itemInfo);
             }
         }
@@ -44,17 +61,22 @@ public class PM_ItemList extends javax.swing.JFrame {
         ItemTable.clearSelection();
     }
     
-    private void setSelectedTable(){
+    private void setSelectedTable() {
         SelectedTable = new DefaultTableModel();
-        Item [] itemList = new Item[10];
+        Item[] itemList = selectedList_true;
         
-        String[] columnNames = {"Item ID"};
+        String[] columnNames = {"Item ID", "Reorder Amount"};
         SelectedTable.setColumnIdentifiers(columnNames);
         
-        for (Item item : itemList){
-            if(item != null){
-                String [] itemInfo = item.getItemInfo();
-                SelectedTable.addRow(itemInfo);
+        for (Item item : itemList) {
+            if (item != null) {
+                String[] itemInfo = item.getItemInfo();
+                String reorderAmt = "0";
+                if (item.getQuantity() < item.getReorderLevel()){
+                    reorderAmt = Integer.toString(item.getReorderLevel() - item.getQuantity());
+                }
+                String[] rowData = {itemInfo[0], reorderAmt};
+                SelectedTable.addRow(rowData);
             }
         }
         
@@ -78,12 +100,14 @@ public class PM_ItemList extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         BackButton = new javax.swing.JButton();
         createPRButton = new javax.swing.JButton();
-        dateTimePicker1 = new com.github.lgooddatepicker.components.DateTimePicker();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         Table = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        dateTime = new com.github.lgooddatepicker.components.DateTimePicker();
+        ClearButton = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -112,6 +136,9 @@ public class PM_ItemList extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ItemTableMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ItemTableMouseReleased(evt);
+            }
         });
         jScrollPane1.setViewportView(ItemTable);
 
@@ -132,7 +159,7 @@ public class PM_ItemList extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Select Items to create new purchase requisition:");
+        jLabel2.setText("Select Items by clicking to create new purchase requisition:");
         jLabel2.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 14)); // NOI18N
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
@@ -143,38 +170,66 @@ public class PM_ItemList extends javax.swing.JFrame {
 
             }
         ));
+        Table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TableMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(Table);
 
-        jLabel3.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 14)); // NOI18N
         jLabel3.setText("Items Selected");
+        jLabel3.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 14)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 14)); // NOI18N
         jLabel4.setText("Select due date and time:");
+        jLabel4.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 14)); // NOI18N
+
+        ClearButton.setText("Clear");
+        ClearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClearButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Double click to set reorder amount");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(dateTimePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
+                        .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(52, 52, 52)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4))
+                        .addContainerGap(63, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(dateTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(142, 142, 142)
+                        .addComponent(ClearButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(createPRButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BackButton))
-                    .addComponent(jLabel4)
-                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(BackButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
-                .addContainerGap(756, Short.MAX_VALUE))
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3)
+                                .addGap(152, 152, 152))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addGap(23, 23, 23))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,18 +239,21 @@ public class PM_ItemList extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dateTimePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(createPRButton)
-                    .addComponent(BackButton))
+                    .addComponent(BackButton)
+                    .addComponent(dateTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ClearButton))
                 .addGap(16, 16, 16))
         );
 
@@ -211,30 +269,123 @@ public class PM_ItemList extends javax.swing.JFrame {
 
     private void createPRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPRButtonActionPerformed
         // TODO add your handling code here:
-//        PR pr = new PR("test");
-//        pr.setItems();
-//        pr.createPR();
+        try{
+            String date = dateTime.toString();
+            if(date.isEmpty()){
+                throw new Exception("Due date is empty");
+            }
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            LocalDateTime date_1 = LocalDateTime.parse(date, inputFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            String formattedDate = date_1.format(outputFormatter);
+
+            int count = 0;
+            for (Item item : selectedList_true) {
+                if (item != null) {
+                    count++;
+                }
+            }
+
+            Item[] itemList = new Item[count];        
+            int ind = 0;
+            for (Item item1 : selectedList_true) {
+                if (item1 != null) {
+                    int reorderAmt = Integer.parseInt(SelectedTable.getValueAt(ind, 1).toString());
+                    if (reorderAmt < 1){
+                        throw new Exception("Invalid reorder amount at row " + (int)(ind+1));
+                    }
+                    item1.setReorderAmt(reorderAmt);
+                    itemList[ind] = item1;
+                    ind++;
+                }
+            }
+            if (itemList.length < 1){
+                throw new Exception("Please select item");
+            }
+            PR newPR = new PR(formattedDate);
+            newPR.setUser(authenticatedUser);
+            newPR.setItems(itemList);
+            String prId = newPR.createPR();
+            if (prId == null) {
+                throw new Exception("Fail to create PR");
+            }else{
+                JOptionPane.showMessageDialog(this, "PR is created with ID: " + prId);
+                selectedList = new String[500];
+                selectedList_true = new Item[500];
+                setSelectedTable();
+            }
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Fail to create PR: \n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_createPRButtonActionPerformed
 
     private void ItemTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ItemTableMouseClicked
         // TODO add your handling code here:
+        Item nv = new Item();
+        int row = ItemTable.getSelectedRow();
+        int col = 0;
+        String value = ItemTable.getValueAt(row, col).toString();
+        boolean run = true;
+        
+        for (int i = 0; i < selectedList.length; i++) {
+            if (value.equals(selectedList[i])) {
+                JOptionPane.showMessageDialog(this, "Value '" + value + "' is already in the array. Assignment rejected.", "Error", JOptionPane.ERROR_MESSAGE);
+                
+                run = false;
+            }
+        }
+        
+        if (run) {
+            selectedList[TotalSelected] = value;
+            selectedList_true[TotalSelected] = Item.getItemById(value);
+            TotalSelected += 1;
+        }
+        
         setSelectedTable();
     }//GEN-LAST:event_ItemTableMouseClicked
+
+    private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
+
+    }//GEN-LAST:event_TableMouseClicked
+
+    private void ItemTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ItemTableMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ItemTableMouseReleased
+
+    private void ClearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearButtonActionPerformed
+        // TODO add your handling code here:
+        TotalSelected = 0;
+        
+        for (int i = 0; i < selectedList.length; i++) {
+            selectedList[i] = null;
+            selectedList_true[i] = null;            
+        }
+        
+        setSelectedTable();
+        
+    }//GEN-LAST:event_ClearButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    
+//    public static void main(String[] args) {
+//        new PM_ItemList().setVisible(true);
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JButton ClearButton;
     private javax.swing.JTable ItemTable;
     private javax.swing.JTable Table;
     private javax.swing.JButton createPRButton;
-    private com.github.lgooddatepicker.components.DateTimePicker dateTimePicker1;
+    private com.github.lgooddatepicker.components.DateTimePicker dateTime;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
