@@ -175,7 +175,7 @@ public class Supplier implements Config{
                 supplierArr[ind] = new Supplier(supplierId, supplierName, supplierEmail, supplierStatus);
                 
                 // get the supplier's items
-                Item [] itemList = Item.getItemList();
+                Item [] itemList = Item.getItemList(supplierId);
                 supplierArr[ind].items = itemList;
                 
                 ind++;
@@ -408,6 +408,7 @@ public class Supplier implements Config{
         Item [] supplierItems = this.getCurrentSupplierItems();
         for (Item item : supplierItems){
             if (item != null){
+                System.out.println(item.getItemId());
                 item.deleteItem();
             }
             

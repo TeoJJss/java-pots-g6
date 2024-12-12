@@ -71,6 +71,7 @@ public class FM_PoItems extends javax.swing.JFrame {
 
             }
         ));
+        itemsTable.setEnabled(false);
         jScrollPane1.setViewportView(itemsTable);
 
         creatorInfoLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N

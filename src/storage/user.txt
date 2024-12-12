@@ -1,3 +1,7 @@
 U1,yf,testuser123,AM,active
 U2,max,newpassword1,SM,active
 U3,jj,jj123,FM,active
+U4,louis,etst123,PM,active
+U5,auna,auna123,IM,active
+U6,testuser11,testuser,SM,deleted
+U7,test,test22,SM,active
