@@ -21,7 +21,7 @@ public class PM_ViewPO extends javax.swing.JFrame {
     public PM_ViewPO(User authenticatedUser) {
         initComponents();
         this.authenticatedUser = authenticatedUser;
-        setTitle("View PO List - PM");
+        setTitle("View PO List - " + authenticatedUser.getUsername());
         setTable();
     }
     

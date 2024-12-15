@@ -23,6 +23,7 @@ public class PM_PrList extends javax.swing.JFrame {
     public PM_PrList(User authenticatedUser) {
         initComponents();
         this.authenticatedUser = authenticatedUser;
+        setTitle("Manage Purchase Requisition - " + authenticatedUser.getUsername());
         setTable();
     }
 

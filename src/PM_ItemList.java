@@ -32,7 +32,7 @@ public class PM_ItemList extends javax.swing.JFrame {
     public PM_ItemList(User authenticatedUser) {
         initComponents();
         this.authenticatedUser = authenticatedUser;
-        setTitle("View Supplier List - PM");
+        setTitle("Manage Items - " + authenticatedUser.getUsername());
         setTable();
     }
     

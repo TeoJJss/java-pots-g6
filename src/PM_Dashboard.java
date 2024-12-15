@@ -68,7 +68,7 @@ public class PM_Dashboard extends javax.swing.JFrame {
             }
         });
 
-        managePOButton.setText("Manage Purchase Order");
+        managePOButton.setText("View Purchase Order");
         managePOButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 managePOButtonActionPerformed(evt);
@@ -117,11 +117,11 @@ public class PM_Dashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(welcomeMsgLabel)
-                .addGap(60, 60, 60)
+                .addGap(53, 53, 53)
                 .addComponent(ManageItemsButton)
                 .addGap(18, 18, 18)
                 .addComponent(SupplierButton)
-                .addGap(11, 11, 11)
+                .addGap(18, 18, 18)
                 .addComponent(PRButton)
                 .addGap(18, 18, 18)
                 .addComponent(managePOButton)

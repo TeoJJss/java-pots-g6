@@ -25,7 +25,7 @@ public class PM_PrItems extends javax.swing.JFrame {
     public PM_PrItems(PR pr, User authenticatedUser) {
         this.targetPR = pr;
         this.authenticatedUser = authenticatedUser;
-        setTitle("Items in PR");
+        setTitle("Items in PR - " + authenticatedUser.getUsername());
         
         initComponents();
         setTable();

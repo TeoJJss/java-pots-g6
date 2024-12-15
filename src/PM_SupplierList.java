@@ -19,7 +19,7 @@ public class PM_SupplierList extends javax.swing.JFrame {
     public PM_SupplierList(User authenticatedUser) {
         initComponents();
         this.authenticatedUser = authenticatedUser;
-        setTitle("View Supplier List - PM");
+        setTitle("View Supplier List - " + authenticatedUser.getUsername());
         setTable();
     }
     
