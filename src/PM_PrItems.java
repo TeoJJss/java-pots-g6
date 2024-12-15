@@ -164,6 +164,9 @@ public class PM_PrItems extends javax.swing.JFrame {
         
         Item targetPRItem = prItems[row];
         try{
+            if (reorderAmt < 1){
+                throw new Exception("Invalid reorder amount");
+            }
             targetPR.editReorderAmt(targetPRItem, reorderAmt);
             dispose();
             PM_PrList pM_PrList = new PM_PrList(authenticatedUser);
