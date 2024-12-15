@@ -224,7 +224,7 @@ public class SM_CreatePR extends javax.swing.JFrame {
             newPR.setItems(targetItems);
             String prId= newPR.createPR();
             if (prId == null){
-                throw new Exception("Fail to create PR");
+                throw new Exception("Fail to create PR, please check your entered information");
             }
             JOptionPane.showMessageDialog(this, "A new PR is created");
             rows = null;
