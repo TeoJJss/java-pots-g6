@@ -183,6 +183,7 @@ public class PM_PrList extends javax.swing.JFrame {
             }
 
             targetPR.updatePRStatus("rejected"); //approved or rejected
+            JOptionPane.showMessageDialog(this, "rejected PR");
             setTable();
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, "Fail to reject PR: \n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
