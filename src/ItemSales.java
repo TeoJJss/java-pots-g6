@@ -79,27 +79,27 @@ public class ItemSales extends Item {
         
         if (newQuantity < 0){
             throw new Exception("Insufficient stock to complete the sales entry");
-        }
-        
-        for (ItemSales itemSales : itemSalesList){
-            if(itemSales.getItemId().equals(targetItemId) && itemSales.getSales() == sales && itemSales.getDate().equals(date)){
-                itemSales.setItemSales(newSales);
-                break;
+        }else{
+            for (ItemSales itemSales : itemSalesList){
+                if(itemSales.getItemId().equals(targetItemId) && itemSales.getSales() == sales && itemSales.getDate().equals(date)){
+                    itemSales.setItemSales(newSales);
+                    break;
+                }
             }
+
+            this.sales = newSales;
+            FileWriter salesFw = new FileWriter(itemSalesF);
+            BufferedWriter salesBw = new BufferedWriter(salesFw);
+            for (ItemSales itemSales : itemSalesList){
+                String salesInfo = itemSales.getItemId() + "," + itemSales.getSales() + "," + itemSales.getDate() + "\n";
+
+                salesBw.write(salesInfo);
+            }
+            salesBw.close();
+            salesFw.close();
+
+            super.editItem(super.getItemName(), newQuantity, super.getReorderLevel());
         }
-        
-        this.sales = newSales;
-        FileWriter salesFw = new FileWriter(itemSalesF);
-        BufferedWriter salesBw = new BufferedWriter(salesFw);
-        for (ItemSales itemSales : itemSalesList){
-            String salesInfo = itemSales.getItemId() + "," + itemSales.getSales() + "," + itemSales.getDate() + "\n";
-            
-            salesBw.write(salesInfo);
-        }
-        salesBw.close();
-        salesFw.close();
-        
-        super.editItem(super.getItemName(), newQuantity, super.getReorderLevel());
     }
     public String getDate() {
         return date;
