@@ -92,6 +92,11 @@ public class SM_ManageItem extends javax.swing.JFrame {
         });
 
         updateBtn.setText("Add Sales");
+        updateBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                updateBtnMouseReleased(evt);
+            }
+        });
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateBtnActionPerformed(evt);
@@ -130,8 +135,7 @@ public class SM_ManageItem extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(13, 13, 13)
-                                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(43, 43, 43))
+                                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(90, 90, 90)
@@ -229,6 +233,10 @@ public class SM_ManageItem extends javax.swing.JFrame {
         salesreport.setVisible(true);
         dispose();
     }//GEN-LAST:event_generateSalesReportBtnActionPerformed
+
+    private void updateBtnMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateBtnMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateBtnMouseReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
