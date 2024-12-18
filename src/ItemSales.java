@@ -69,6 +69,40 @@ public class ItemSales extends Item {
         salesFw.close();
     }
     
+    /*Edit Sales*/
+    public void editSales(int newSales) throws Exception{
+        ItemSales [] itemSalesList = this.getSalesRecordsList();
+        String targetItemId = super.getItemId();
+        
+        for (ItemSales itemSales : itemSalesList){
+            if(itemSales.getItemId().equals(targetItemId) && itemSales.getSales() == sales && itemSales.getDate().equals(date)){
+                itemSales.setItemSales(newSales);
+                break;
+            }
+        }
+        int originalSales = this.sales;
+        this.sales = newSales;
+        FileWriter salesFw = new FileWriter(itemSalesF);
+        BufferedWriter salesBw = new BufferedWriter(salesFw);
+        for (ItemSales itemSales : itemSalesList){
+            String salesInfo = itemSales.getItemId() + "," + itemSales.getSales() + "," + itemSales.getDate() + "\n";
+            
+            salesBw.write(salesInfo);
+        }
+        salesBw.close();
+        salesFw.close();
+        
+        int newQuantity = super.getQuantity() + originalSales - newSales;
+        super.editItem(super.getItemName(), newQuantity, super.getReorderLevel());
+    }
+    public String getDate() {
+        return date;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+    
     /* Get all sales */
     public ItemSales [] getSalesRecordsList(){
         try{

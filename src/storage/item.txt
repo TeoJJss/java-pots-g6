@@ -1,11 +1,11 @@
-I1,Powerbank,100,10,S4,active
-I2,Table,30,20,S1,active
+I1,Powerbank,95,10,S4,active
+I2,Table,19,20,S1,active
 I3,Desk,10,18,S1,active
 I4,Lamp,12,20,S3,active
-I5,Oven,35,18,S3,active
+I5,Oven,29,18,S3,active
 I6,Chair,25,14,S1,active
 I7,Earphones,30,20,S4,active
-I8,Camera,15,18,S4,active
+I8,Camera,13,18,S4,active
 I9,Microwave,5,14,S3,active
 I10,Tablet,25,14,S4,active
 I11,Speaker,30,20,S4,active
