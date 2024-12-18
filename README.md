@@ -1,7 +1,8 @@
-# OODJ G6 - POTS
+# OODJ Assignment G6 - POTS
 ## Instruction
 Upload Java files in `src/` folder.  
 Upload txt files in `src/storage/` folder.  
+`LGoodDatePicker-11.2.1.jar` file is for the datetime picker plugin.  
 
 ## Txt file content
 **user.txt**  
@@ -48,3 +49,10 @@ Upload txt files in `src/storage/` folder.
 `col 3` : user ID (foreign)  
 `col 4` : created timestamp  
 `col 5` : status [pending, approved, rejected, paid]  
+
+## Credits  
+- <a href="https://github.com/TeoJJss">Teo Jun Jia</a>  
+- <a href="https://github.com/mysticsyf">Sim Yi Feng</a>  
+- <a href="https://github.com/TakoLouie">Louis Ng Yu Hern</a>  
+- <a href="https://github.com/auna1314">Au Lok Yen</a>  
+- <a href="https://github.com/Maxsaw1">Saw Wen Jun</a>  
