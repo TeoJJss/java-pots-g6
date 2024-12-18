@@ -1,4 +1,4 @@
-I1,Powerbank,95,10,S4,active
+I1,Powerbank,92,10,S4,active
 I2,Table,19,20,S1,active
 I3,Desk,10,18,S1,active
 I4,Lamp,12,20,S3,active
